@@ -13,10 +13,14 @@ export class Header {
   router = inject(Router);
 
   goToUserCreation(){
-    this.router.navigate(['/create-user'])
+    this.router.navigate(['/create-user']);
+  }
+
+  goToUserSummary(){
+    this.router.navigate(['/user-summary']);
   }
 
   goToHome(){
-    this.router.navigate([''])
+    this.router.navigate(['']);
   }
 }

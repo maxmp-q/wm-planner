@@ -1,0 +1,33 @@
+<div class="add-user-container">
+  <button (click)="openDropdown()">{{ currentUser()?.firstname ?? "Select User" }}</button>
+
+  @if(showDropdown()){
+    <ul>
+      @for (user of users(); track user.id) {
+        <li (click)="selectUser(user)">
+          {{ user.firstname }} {{ user.lastname }}
+        </li>
+      }
+    </ul>
+  }
+</div>
+
+
+<section>
+  <table>
+    <thead>
+    <tr>
+      <th>Aufgabe</th>
+      <th>Uhrzeit/Aktivität</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (exercise of exercisesOfUser(); track $index) {
+        <tr>
+          <td>{{ exercise.card.title }}</td>
+          <td>{{ exercise.timeslot.time }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

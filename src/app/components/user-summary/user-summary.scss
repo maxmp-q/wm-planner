@@ -1,0 +1,98 @@
+@import '../../../styles/theme';
+
+
+// ----------------------------------------------------
+// TABLE Styling
+// ----------------------------------------------------
+section {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  border-collapse: collapse;
+  overflow: hidden;
+  padding: 0; // table braucht kein inner padding
+}
+
+thead {
+  background: $background-light;
+}
+
+th {
+  text-align: left;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-primary-dark;
+  border-bottom: 1px solid $color-secondary-tint;
+}
+
+td {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: $color-secondary-dark;
+  border-bottom: 1px solid $color-secondary-tint;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: $color-accent-tint;
+}
+
+// Add User Button + Dropdown
+.add-user-container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-top: 8px;
+}
+
+.add-user-container button {
+  padding: 10px 16px;
+  background: $color-primary-light;
+  color: $color-white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.add-user-container button:hover {
+  background: $color-accent-dark;
+  box-shadow: $shadow-medium;
+}
+
+// Dropdown
+.add-user-container ul {
+  position: absolute;
+  top: 110%;
+  left: 50%; /* Mitte des Containers */
+  transform: translateX(-50%);  width: 220px;
+  background: $color-white;
+  border: 1px solid $color-secondary-tint;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+  list-style: none;
+  padding: 6px 0;
+  margin: 0;
+  z-index: 100;
+}
+
+.add-user-container ul li {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: $color-secondary-dark;
+  transition: background 0.15s;
+}
+
+.add-user-container ul li:hover {
+  background: $color-accent-tint;
+}
+
