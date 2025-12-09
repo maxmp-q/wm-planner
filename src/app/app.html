@@ -1,4 +1,14 @@
 <section>
-  <app-header/>
-  <router-outlet/>
+  @if(login()){
+    <app-header/>
+    <router-outlet/>
+  } @else {
+    <label>
+      Bitte gibt das Passwort ein:
+      <input
+        class="login-input"
+        [(ngModel)]="password"
+      >
+    </label>
+  }
 </section>
