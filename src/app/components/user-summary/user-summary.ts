@@ -41,6 +41,8 @@ export class UserSummary {
       })
     }
 
+    userExercises.sort((a,b) => a.timeslot.id - b.timeslot.id);
+
     return userExercises;
   })
 
