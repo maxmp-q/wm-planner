@@ -16,10 +16,6 @@ export class Header {
     this.router.navigate(['/create-user']);
   }
 
-  goToUserSummary(){
-    this.router.navigate(['/user-summary']);
-  }
-
   goToHome(){
     this.router.navigate(['']);
   }

@@ -130,3 +130,29 @@ tr:last-child td {
 tbody tr:hover {
   background: $color-accent-tint;
 }
+
+.summary-button {
+  display: block;       // Block-Element, damit margin wirkt
+  margin: 20px auto;    // Zentriert horizontal, mit 20px Abstand oben/unten
+  padding: 12px 16px;
+
+  background: $color-primary-light;
+  color: $color-white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.summary-button:hover {
+  background: $color-primary-dark;
+  box-shadow: $shadow-medium;
+}
+
+.summary-button:active {
+  background: $color-primary-dark;
+  box-shadow: $shadow-light;
+}
+

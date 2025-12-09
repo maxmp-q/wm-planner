@@ -48,9 +48,6 @@ export class CreateUser {
         this.state.createUser(newUser);
 
         console.log(newUser.firstname + " wurde erstellt!");
-        console.log(newUser);
-
-        this.router.navigate(['']);
       } else {
         console.log("User existiert schon oder es gab Probleme beim erstellen.");
       }
@@ -61,5 +58,9 @@ export class CreateUser {
 
   deleteUser(user: IUser){
     this.state.deleteUser(user);
+  }
+
+  goToUserSummary(){
+    this.router.navigate(['/user-summary']);
   }
 }
