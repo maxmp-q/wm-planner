@@ -1,0 +1,45 @@
+name: Deploy Angular to Firebase
+
+on:
+  push:
+    branches:
+      - main  # Ändere das auf deinen Hauptbranch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Repository auschecken
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Node.js installieren
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22  # gleiche Version wie lokal
+
+      # 3. Abhängigkeiten installieren
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Angular App bauen
+      - name: Build Angular app
+        run: npm run build -- --configuration production
+
+      # 5. Firebase CLI installieren
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      # 6. Firebase Login via Token
+      - name: Firebase Login
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase login:ci --token $FIREBASE_TOKEN
+
+      # 7. Deployment zu Firebase Hosting
+      - name: Deploy to Firebase
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --only hosting
