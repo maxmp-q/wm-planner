@@ -23,18 +23,20 @@ form {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  padding: 0;
 }
 
 label {
   display: flex;
   flex-direction: column;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: $color-primary-dark;
+  padding: 5px;
 }
 
 input {
-  margin-top: 6px;
+  margin-top: 2px;
   padding: 12px 14px;
 
   background: $color-white;
