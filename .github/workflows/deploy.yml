@@ -32,13 +32,7 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      # 6. Firebase Login via Token
-      - name: Firebase Login
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: firebase login:ci --token $FIREBASE_TOKEN
-
-      # 7. Deployment zu Firebase Hosting
+      # 6. Deployment zu Firebase Hosting
       - name: Deploy to Firebase
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
