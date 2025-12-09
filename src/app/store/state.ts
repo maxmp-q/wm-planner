@@ -1,5 +1,7 @@
 import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
 import {ICard, ITimeSlot, IUser} from '../interfaces/interfaces';
+import { inject} from '@angular/core';
+import {FirebaseService} from '../services/firebase.service';
 
 interface State{
   heading: string;
@@ -7,126 +9,110 @@ interface State{
   allUsers: IUser[];
 }
 
-const testCard: ICard = {
-  title: "Samstag",
-  timeSlots: [
-    {
-      time: "Aufbau",
-      users: [
-        {
-          firstname: "Max",
-          lastname: "P.",
-          id: 1
-        },
-        {
-          firstname: "Alex",
-          lastname: "P.",
-          id: 2
-        }
-      ]
-    },
-    {
-      time: "WBA",
-      users: [
-        {
-          firstname: "Max",
-          lastname: "P.",
-          id: 1
-        },
-        {
-          firstname: "Alex",
-          lastname: "P.",
-          id: 2
-        }
-      ]
-    }
-  ]
-}
-
 const initialState: State = {
   heading: 'Weihnachtsmarkt 2025',
-  cards: [testCard],
-  allUsers: [
-    {firstname: "Max", lastname:"P.", id: 1},
-    {firstname: "Alex", lastname:"P.", id: 2},
-    {firstname: "Fritz", lastname:"P.", id: 3},
-    {firstname: "Hell", lastname:"P.", id: 4}
-  ]
+  cards: [],
+  allUsers: []
 }
-
 
 export const AppState = signalStore(
   {providedIn: 'root'},
   withState<State>(
     initialState
   ),
-  withMethods(state => ({
-    createUser(user: IUser){
-      patchState(state, {allUsers: [...state.allUsers(), user]});
-    },
-    deleteUser(user: IUser){
-      const currentUsers = state.allUsers();
-      const updatedUsers = currentUsers.filter(u => u.id !== user.id);
+  withMethods(state => {
+    const firestore = inject(FirebaseService)
 
-      patchState(state, {allUsers: updatedUsers});
-    },
-    addCard(card: ICard){
-      patchState(state, {cards: [...state.cards(), card]});
-    },
-    addTimeslot(card: ICard, timeslot: ITimeSlot) {
-      const updatedCards = state.cards().map(c => {
-        if (c === card) {
-          return {
-            ...c,
-            timeSlots: [...c.timeSlots, timeslot]
-          };
-        }
-        return c;
-      });
+    return {
+      async loadUsers(){
+        const users = await firestore.getAllUsers();
+        patchState(state, {allUsers: users});
+      },
 
-      patchState(state, { cards: updatedCards });
-    },
-    addUser(card: ICard, timeslot: ITimeSlot, user: IUser) {
-      const updatedCards = state.cards().map(c => {
-        if (c === card) {
-          return {
-            ...c,
-            timeSlots: c.timeSlots.map(ts => {
-              if (ts === timeslot) {
-                return {
-                  ...ts,
-                  users: [...ts.users, user]
-                };
-              }
-              return ts;
-            })
-          };
-        }
-        return c;
-      });
+      async loadCards(){
+        const cards = await firestore.getAllCards();
+        patchState(state, {cards: cards});
+      },
 
-      patchState(state, { cards: updatedCards });
-    },
-    removeUser(card: ICard, timeslot: ITimeSlot, user: IUser){
-      const updatedCards = state.cards().map(c => {
-        if (c === card) {
-          return {
-            ...c,
-            timeSlots: c.timeSlots.map(ts => {
-              if (ts === timeslot) {
-                return {
-                  ...ts,
-                  users: ts.users.filter(u => u.id !== user.id)
-                };
-              }
-              return ts;
-            })
-          };
-        }
-        return c;
-      });
+      async createUser(user: IUser){
+        await firestore.createUser(user);
+        patchState(state, {allUsers: [...state.allUsers(), user]});
+      },
 
-      patchState(state, { cards: updatedCards });
-    }
-  }))
+      async deleteUser(user: IUser){
+        await firestore.deleteUser(user);
+
+        const updatedUsers = state.allUsers().filter(u => u.id !== user.id);
+        patchState(state, {allUsers: updatedUsers});
+      },
+
+      async addCard(card: ICard){
+        await firestore.addCard(card);
+
+        patchState(state, {cards: [...state.cards(), card]});
+      },
+
+      async addTimeslot(card: ICard, timeslot: ITimeSlot) {
+        await firestore.addTimeslot(card, timeslot);
+
+        const updatedCards = state.cards().map(c => {
+          if (c === card) {
+            return {
+              ...c,
+              timeSlots: [...c.timeSlots, timeslot]
+            };
+          }
+          return c;
+        });
+        patchState(state, { cards: updatedCards });
+      },
+
+      async addUser(card: ICard, timeslot: ITimeSlot, user: IUser) {
+        await firestore.addUser(card, timeslot, user);
+
+        const updatedCards = state.cards().map(c => {
+          if (c === card) {
+            return {
+              ...c,
+              timeSlots: c.timeSlots.map(ts => {
+                if (ts === timeslot) {
+                  return {
+                    ...ts,
+                    users: [...ts.users, user]
+                  };
+                }
+                return ts;
+              })
+            };
+          }
+          return c;
+        });
+        patchState(state, { cards: updatedCards });
+      },
+
+      async removeUser(card: ICard, timeslot: ITimeSlot, user: IUser){
+        await firestore.removeUser(card, timeslot, user);
+
+        const updatedCards = state.cards().map(c => {
+          if (c === card) {
+            return {
+              ...c,
+              timeSlots: c.timeSlots.map(ts => {
+                if (ts === timeslot) {
+                  return {
+                    ...ts,
+                    users: ts.users.filter(u => u.id !== user.id)
+                  };
+                }
+                return ts;
+              })
+            };
+          }
+          return c;
+        });
+
+        patchState(state, { cards: updatedCards });
+      }
+    };
+  })
 )

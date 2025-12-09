@@ -18,9 +18,13 @@ export class CreateUser {
 
   users = computed(()=> this.state.allUsers());
   sortedUsers = computed(() => {
-    return this.users()
-      .slice()
-      .sort((a, b) => a.id - b.id);
+    if(this.users()){
+      return this.users()
+        .slice()
+        .sort((a, b) => a.id - b.id);
+    } else {
+      return []
+    }
   });
 
   form = new FormGroup({
@@ -29,7 +33,7 @@ export class CreateUser {
   });
 
   submitForm() {
-    const lastID = this.sortedUsers()[this.sortedUsers().length-1].id;
+    const lastID = this.sortedUsers().length > 0 ? this.sortedUsers()[this.sortedUsers().length-1].id + 1 : 1;
     const firstname = this.form.value.firstname;
     const lastname = this.form.value.lastname;
 
@@ -37,7 +41,7 @@ export class CreateUser {
       const newUser: IUser = {
         firstname: firstname,
         lastname: lastname,
-        id: lastID + 1
+        id: lastID
       }
 
       if(!this.users().includes(newUser)){
@@ -57,7 +61,5 @@ export class CreateUser {
 
   deleteUser(user: IUser){
     this.state.deleteUser(user);
-
-    console.log("User erfolgreich enternt!");
   }
 }

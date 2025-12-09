@@ -1,4 +1,4 @@
-import {Component, inject, input, signal} from '@angular/core';
+import {Component, computed, inject, input, signal} from '@angular/core';
 import {ICard, ITimeSlot} from '../../interfaces/interfaces';
 import {TimeSlot} from '../time-slot/time-slot';
 import {AppState} from '../../store/state';
@@ -15,8 +15,22 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
   styleUrl: './card.scss',
 })
 export class Card {
-  state = inject(AppState)
+  state = inject(AppState);
+
   card = input<ICard>();
+  timeslots = computed(() => this.card()?.timeSlots);
+
+  sortedTimeslots = computed(() => {
+    const timeslots = this.timeslots();
+    if(timeslots){
+      return timeslots
+        .slice()
+        .sort((a, b) => a.id - b.id);
+    } else {
+      return []
+    }
+  });
+
   showAdd = signal<boolean>(false);
 
   form = new FormGroup({
@@ -28,8 +42,11 @@ export class Card {
     const time = this.form.value.time;
 
     if(time && card){
+      const timeslotID = this.sortedTimeslots().length > 0 ? this.sortedTimeslots()[this.sortedTimeslots().length-1].id + 1 : 1;
+
       const timeslot: ITimeSlot = {
         time: time,
+        id: timeslotID,
         users: []
       }
 

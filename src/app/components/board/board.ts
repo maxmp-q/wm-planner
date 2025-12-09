@@ -18,6 +18,15 @@ export class Board {
   state = inject(AppState);
 
   cards = computed(() => this.state.cards());
+  sortedCards = computed(() => {
+    if(this.cards()){
+      return this.cards()
+        .slice()
+        .sort((a, b) => a.id - b.id);
+    } else {
+      return []
+    }
+  })
   showAdd = signal<boolean>(false);
 
   form = new FormGroup({
@@ -28,8 +37,10 @@ export class Board {
     const title = this.form.value.title;
 
     if(title){
+      const cardID = this.sortedCards().length > 0 ? this.sortedCards()[this.sortedCards().length-1].id + 1 : 1;
       const card: ICard = {
         title: title,
+        id: cardID,
         timeSlots: []
       }
 

@@ -17,6 +17,15 @@ export class TimeSlot {
   timeSlot = input<ITimeSlot>();
   card = input<ICard>();
   allUsers = computed(()=> this.state.allUsers());
+
+  availableUsers = computed(()=> {
+    const currentUsers = this.timeSlot()?.users ?? [];
+
+    return this.allUsers().filter(
+      user => !currentUsers.some(cu => cu.id === user.id)
+    );
+  });
+
   showDropdown = signal(false);
 
   toggleDropdown() {

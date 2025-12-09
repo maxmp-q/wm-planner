@@ -12,7 +12,7 @@
 
     @if(showDropdown()){
       <ul>
-        @for (user of allUsers(); track user.id) {
+        @for (user of availableUsers(); track user.id) {
           <li (click)="addUser(user)">
             {{ user.firstname }} {{ user.lastname }}
           </li>
