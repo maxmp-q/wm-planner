@@ -1,0 +1,42 @@
+@import '../../../styles/theme';
+
+
+header {
+  background: linear-gradient(
+      135deg,
+      $color-primary-dark,
+      $color-primary-light
+  );
+  display: flex;
+  justify-content: flex-end;
+  color: $color-white;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  box-shadow: $shadow-light;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba($color-accent, 0.35);
+  }
+
+  // Responsive Größenanpassung
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    padding: 1.2rem;
+  }
+
+  button {
+    display: inline-block;
+    border-radius: 8px;
+    color: #FFFFFF;
+    background: $color-primary-tint;
+    border: 0;
+    margin-left: auto;
+  }
+}
+
+

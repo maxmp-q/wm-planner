@@ -1,0 +1,48 @@
+import {Component, inject, input, signal} from '@angular/core';
+import {ICard, ITimeSlot} from '../../interfaces/interfaces';
+import {TimeSlot} from '../time-slot/time-slot';
+import {AppState} from '../../store/state';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+
+@Component({
+  selector: 'app-card',
+  imports: [
+    TimeSlot,
+    FormsModule,
+    ReactiveFormsModule
+  ],
+  templateUrl: './card.html',
+  styleUrl: './card.scss',
+})
+export class Card {
+  state = inject(AppState)
+  card = input<ICard>();
+  showAdd = signal<boolean>(false);
+
+  form = new FormGroup({
+    time: new FormControl(''),
+  });
+
+  submitForm(){
+    const card = this.card();
+    const time = this.form.value.time;
+
+    if(time && card){
+      const timeslot: ITimeSlot = {
+        time: time,
+        users: []
+      }
+
+      this.state.addTimeslot(card, timeslot)
+
+      console.log(timeslot.time + " wurde erflogreich erstellt.")
+    } else {
+      console.log("Es gab Probleme beim Erstellen des Timeslots")
+    }
+    this.showAdd.set(!this.showAdd());
+  }
+
+  addTimeslot(){
+    this.showAdd.set(!this.showAdd())
+  }
+}

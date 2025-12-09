@@ -1,0 +1,8 @@
+@import "./styles/theme";
+
+html {
+  background: $background-light; // oder z. B. $color-primary, $color-secondary-tint etc.
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}

@@ -1,0 +1,20 @@
+<div class="card">
+  <span>
+    {{card()?.title}}
+  </span>
+  @for (timeSlot of card()?.timeSlots; track $index){
+    <app-time-slot [timeSlot]="timeSlot" [card]="card()" />
+  }
+  @if(showAdd()){
+    <form class="add-timeslot-form" [formGroup]="form" (ngSubmit)="submitForm()">
+      <label>
+        Timeslot Name
+        <input type="text" formControlName="time">
+      </label>
+      <button type="submit">Erstellen</button>
+    </form>
+  }
+  <button class="add-timeslot" (click)="addTimeslot()"> Add Timeslot</button>
+</div>
+
+

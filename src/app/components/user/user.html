@@ -1,0 +1,5 @@
+<span (click)="showDetails()">{{user()?.firstname}} </span>
+@if(details()){
+  <span>{{user()?.lastname}} </span>
+  <button class="remove-user" (click)="removeUser()"> User von Timeslot entfernen</button>
+}

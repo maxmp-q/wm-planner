@@ -1,0 +1,23 @@
+<div class="time-slot-card">
+  <span>{{ timeSlot()?.time }}</span>
+
+  <div class="time-slot-users">
+    @for (user of timeSlot()?.users; track $index) {
+      <app-user [user]="user" [timeslot]="timeSlot()" [card]="card()"/>
+    }
+  </div>
+
+  <div class="add-user-container">
+    <button (click)="toggleDropdown()">Add User</button>
+
+    @if(showDropdown()){
+      <ul>
+        @for (user of allUsers(); track user.id) {
+          <li (click)="addUser(user)">
+            {{ user.firstname }} {{ user.lastname }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>
