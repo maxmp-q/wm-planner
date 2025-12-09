@@ -1,5 +1,5 @@
 {
-  "name": "angular-test",
+  "name": "wm-planner",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -29,6 +29,7 @@
     "@angular/platform-browser": "^20.3.15",
     "@angular/router": "^20.3.15",
     "@ngrx/signals": "^20.1.0",
+    "firebase": "^12.6.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

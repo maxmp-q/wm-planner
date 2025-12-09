@@ -1,4 +1,6 @@
+@use "sass:color";
 @import '../../../styles/theme';
+
 
 .card {
   background: $background-light;
@@ -35,7 +37,8 @@
     transition: background 0.2s ease;
 
     &:hover {
-      background: lighten($color-secondary-tint, 3%);
+      background: color.adjust($color-secondary-tint, $lightness: 3%);
+    ;
     }
   }
 }

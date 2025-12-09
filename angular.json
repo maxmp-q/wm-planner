@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-test": {
+    "wm-planner": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -60,10 +60,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-test:build:production"
+              "buildTarget": "wm-planner:build:production"
             },
             "development": {
-              "buildTarget": "angular-test:build:development"
+              "buildTarget": "wm-planner:build:development"
             }
           },
           "defaultConfiguration": "development"
