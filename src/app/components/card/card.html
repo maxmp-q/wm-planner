@@ -1,11 +1,7 @@
 <div class="card">
   <span class="card-title" (click)="toggleExpanded()">
+    <app-icon [which]="expanded() ? 'arrow_down' : 'arrow_right'" />
     {{card()?.title}}
-    @if(!expanded()){
-      <span class="card-expanded">
-        (Click to Expand!)
-      </span>
-    }
   </span>
   @if(expanded()){
     @for (timeSlot of card()?.timeSlots; track $index){

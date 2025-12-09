@@ -3,13 +3,15 @@ import {ICard, ITimeSlot} from '../../interfaces/interfaces';
 import {TimeSlot} from '../time-slot/time-slot';
 import {AppState} from '../../store/state';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Icon} from '../icon/icon';
 
 @Component({
   selector: 'app-card',
   imports: [
     TimeSlot,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Icon
   ],
   templateUrl: './card.html',
   styleUrl: './card.scss',
