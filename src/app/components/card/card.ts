@@ -20,6 +20,8 @@ export class Card {
   card = input<ICard>();
   timeslots = computed(() => this.card()?.timeSlots);
 
+  expanded = signal<boolean>(false);
+
   sortedTimeslots = computed(() => {
     const timeslots = this.timeslots();
     if(timeslots){
@@ -61,5 +63,9 @@ export class Card {
 
   addTimeslot(){
     this.showAdd.set(!this.showAdd())
+  }
+
+  toggleExpanded(){
+    this.expanded.set(!this.expanded());
   }
 }

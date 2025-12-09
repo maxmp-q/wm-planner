@@ -12,11 +12,11 @@ export class Header {
   state = inject(AppState);
   router = inject(Router);
 
-  createUser(){
+  goToUserCreation(){
     this.router.navigate(['/create-user'])
   }
 
-  onClick(){
+  goToHome(){
     this.router.navigate([''])
   }
 }
