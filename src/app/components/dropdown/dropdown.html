@@ -1,0 +1,16 @@
+<div class="add-user-container">
+  <button class="open-dropdown-button" (click)="toggleDropdown()">
+    {{ this.title() }}
+    <app-icon which="arrow_down" width="16" height="16"/>
+  </button>
+
+  @if(showDropdown()){
+    <ul class="dropdown">
+      @for (user of users(); track user.id) {
+        <li class="dropdown-element" (click)="selectEntry(user)">
+          {{ user.firstname }} {{ user.lastname }}
+        </li>
+      }
+    </ul>
+  }
+</div>

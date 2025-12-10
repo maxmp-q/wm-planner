@@ -2,12 +2,12 @@
   <app-card [card]="card"></app-card>
 }
 @if(showAdd()){
-  <form class="add-card-form" [formGroup]="form" (ngSubmit)="submitForm()">
+  <div class="add-card-form">
     <label class="form-label">
-      Card Titel
-      <input type="text" formControlName="title">
+      Karten Titel
+      <input type="text" [(ngModel)]="cardTitle">
     </label>
-    <button type="submit">Erstellen</button>
-  </form>
+    <button (click)="submitForm()">Erstellen</button>
+  </div>
 }
 <button class="add-card" (click)="addCard()">Karte hinzufügen</button>

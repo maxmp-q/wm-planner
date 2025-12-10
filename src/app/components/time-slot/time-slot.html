@@ -6,18 +6,9 @@
       <app-user [user]="user" [timeslot]="timeSlot()" [card]="card()"/>
     }
   </div>
-
-  <div class="add-user-container">
-    <button (click)="toggleDropdown()">User hinzufügen</button>
-
-    @if(showDropdown()){
-      <ul>
-        @for (user of availableUsers(); track user.id) {
-          <li (click)="addUser(user)">
-            {{ user.firstname }} {{ user.lastname }}
-          </li>
-        }
-      </ul>
-    }
-  </div>
+  <app-dropdown
+    [users]="availableUsers()"
+    title="User hinzufügen"
+    (selectedCard)="addUser($event)"
+  />
 </div>

@@ -1,16 +1,16 @@
-<form [formGroup]="form" (ngSubmit)="submitForm()">
-  <label>
+<div class="create-user-form">
+  <label class="create-user-label">
     Vorname
-    <input type="text" formControlName="firstname">
+    <input class="create-user-input" type="text" [(ngModel)]="firstname">
   </label>
 
-  <label>
+  <label class="create-user-label">
     Nachname
-    <input type="text" formControlName="lastname">
+    <input class="create-user-input" type="text" [(ngModel)]="lastname">
   </label>
 
-  <button type="submit">Erstellen</button>
-</form>
+  <button class="create-user-button" (click)="submitForm()">Erstellen</button>
+</div>
 
 <button class="summary-button" (click)="goToUserSummary()">User Zusammenfassung</button>
 
@@ -33,7 +33,7 @@
           <td>{{ user.lastname }}</td>
           <td>{{ user.id }}</td>
           <td>
-            <button (click)="deleteUser(user)">
+            <button class="create-user-button" (click)="deleteUser(user)">
               X
             </button>
           </td>

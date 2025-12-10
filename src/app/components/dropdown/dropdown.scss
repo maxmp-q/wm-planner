@@ -1,0 +1,55 @@
+@import '../../../styles/theme';
+
+// Add User Button + Dropdown
+.add-user-container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-top: 8px;
+}
+
+.open-dropdown-button {
+  display: flex;
+  align-content: center;
+  padding: 10px 16px;
+  justify-content: center;
+  background: $color-primary-light;
+  color: $color-white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.open-dropdown-button:hover {
+  background: $color-accent-dark;
+  box-shadow: $shadow-medium;
+}
+
+.dropdown {
+  position: absolute;
+  top: 110%;
+  left: 50%; /* Mitte des Containers */
+  transform: translateX(-50%);  width: 220px;
+  background: $color-white;
+  border: 1px solid $color-secondary-tint;
+  border-radius: 10px;
+  box-shadow: $shadow-light;
+  list-style: none;
+  padding: 6px 0;
+  margin: 0;
+  z-index: 100;
+}
+
+.dropdown-element{
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: $color-secondary-dark;
+  transition: background 0.15s;
+}
+
+.dropdown-element:hover{
+  background: $color-accent-tint;
+}

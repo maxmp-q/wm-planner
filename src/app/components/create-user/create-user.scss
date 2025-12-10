@@ -17,7 +17,7 @@
 // ----------------------------------------------------
 // FORM Styling
 // ----------------------------------------------------
-form {
+.create-user-form {
   @extend .shared-card;
 
   display: flex;
@@ -26,7 +26,7 @@ form {
   padding: 0;
 }
 
-label {
+.create-user-label {
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -35,7 +35,7 @@ label {
   padding: 5px;
 }
 
-input {
+.create-user-input {
   margin-top: 2px;
   padding: 12px 14px;
 
@@ -49,17 +49,17 @@ input {
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
-input::placeholder {
+.create-user-input::placeholder {
   color: $color-secondary-light;
 }
 
-input:focus {
+.create-user-input:focus {
   border-color: $color-primary;
   box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
   outline: none;
 }
 
-button {
+.create-user-button {
   margin-top: 10px;
   padding: 12px 16px;
 
@@ -76,12 +76,12 @@ button {
   transition: background 0.2s, box-shadow 0.2s;
 }
 
-button:hover {
+.create-user-button:hover {
   background: $color-primary-dark;
   box-shadow: $shadow-medium;
 }
 
-button:active {
+.create-user-button:active {
   background: $color-primary-dark;
   box-shadow: $shadow-light;
 }

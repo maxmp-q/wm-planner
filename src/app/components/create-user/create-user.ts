@@ -1,13 +1,14 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import {AppState} from '../../store/state';
-import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {IUser} from '../../interfaces/interfaces';
 import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-create-user',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   templateUrl: './create-user.html',
   styleUrl: './create-user.scss',
@@ -23,19 +24,17 @@ export class CreateUser {
         .slice()
         .sort((a, b) => a.id - b.id);
     } else {
-      return []
+      return [];
     }
   });
 
-  form = new FormGroup({
-    firstname: new FormControl(''),
-    lastname: new FormControl(''),
-  });
+  firstname = signal<string>('');
+  lastname = signal<string>('')
 
   submitForm() {
     const lastID = this.sortedUsers().length > 0 ? this.sortedUsers()[this.sortedUsers().length-1].id + 1 : 1;
-    const firstname = this.form.value.firstname;
-    const lastname = this.form.value.lastname;
+    const firstname = this.firstname();
+    const lastname = this.lastname();
 
     if(firstname && lastname){
       const newUser: IUser = {
@@ -46,6 +45,9 @@ export class CreateUser {
 
       if(!this.users().includes(newUser)){
         this.state.createUser(newUser);
+
+        this.firstname.set('');
+        this.lastname.set('');
 
         console.log(newUser.firstname + " wurde erstellt!");
       } else {

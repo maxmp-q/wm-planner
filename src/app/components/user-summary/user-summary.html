@@ -1,17 +1,8 @@
-<div class="add-user-container">
-  <button (click)="openDropdown()">{{ currentUser()?.firstname ?? "Select User" }}</button>
-
-  @if(showDropdown()){
-    <ul>
-      @for (user of users(); track user.id) {
-        <li (click)="selectUser(user)">
-          {{ user.firstname }} {{ user.lastname }}
-        </li>
-      }
-    </ul>
-  }
-</div>
-
+<app-dropdown
+  [users]="users()"
+  [title]=" currentUser()?.firstname ?? 'User auswählen'"
+  (selectedCard)="selectUser($event)"
+/>
 
 <section>
   <table>

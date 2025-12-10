@@ -2,11 +2,13 @@ import {Component, computed, inject, input, signal} from '@angular/core';
 import {ITimeSlot, ICard, IUser} from '../../interfaces/interfaces';
 import {User} from '../user/user';
 import {AppState} from '../../store/state';
+import {Dropdown} from '../dropdown/dropdown';
 
 @Component({
   selector: 'app-time-slot',
   imports: [
-    User
+    User,
+    Dropdown
   ],
   templateUrl: './time-slot.html',
   styleUrl: './time-slot.scss',

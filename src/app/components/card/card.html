@@ -8,13 +8,13 @@
       <app-time-slot [timeSlot]="timeSlot" [card]="card()" />
     }
     @if(showAdd()){
-      <form class="add-timeslot-form" [formGroup]="form" (ngSubmit)="submitForm()">
+      <div class="add-timeslot-form">
         <label>
           Timeslot Name
-          <input type="text" formControlName="time">
+          <input type="text" [(ngModel)]="time">
         </label>
-        <button type="submit">Erstellen</button>
-      </form>
+        <button (click)="submitForm()">Erstellen</button>
+      </div>
     }
     <button class="add-timeslot" (click)="addTimeslot()"> Timeslot hinzufügen</button>
   }

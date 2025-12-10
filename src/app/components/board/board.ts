@@ -2,7 +2,7 @@ import {Component, computed, inject, signal} from '@angular/core';
 import {AppState} from '../../store/state';
 import {Card} from '../card/card';
 import {ICard} from '../../interfaces/interfaces';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-board',
@@ -27,14 +27,12 @@ export class Board {
       return []
     }
   })
-  showAdd = signal<boolean>(false);
 
-  form = new FormGroup({
-    title: new FormControl(''),
-  });
+  showAdd = signal<boolean>(false);
+  cardTitle = signal<string>('');
 
   submitForm(){
-    const title = this.form.value.title;
+    const title = this.cardTitle();
 
     if(title){
       const cardID = this.sortedCards().length > 0 ? this.sortedCards()[this.sortedCards().length-1].id + 1 : 1;

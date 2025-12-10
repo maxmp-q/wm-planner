@@ -2,7 +2,7 @@ import {Component, computed, inject, input, signal} from '@angular/core';
 import {ICard, ITimeSlot} from '../../interfaces/interfaces';
 import {TimeSlot} from '../time-slot/time-slot';
 import {AppState} from '../../store/state';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Icon} from '../icon/icon';
 
 @Component({
@@ -36,25 +36,26 @@ export class Card {
   });
 
   showAdd = signal<boolean>(false);
-
-  form = new FormGroup({
-    time: new FormControl(''),
-  });
+  time = signal<string>('');
 
   submitForm(){
     const card = this.card();
-    const time = this.form.value.time;
+    const time = this.time();
 
     if(time && card){
-      const timeslotID = this.sortedTimeslots().length > 0 ? this.sortedTimeslots()[this.sortedTimeslots().length-1].id + 1 : 1;
+      const timeslotID = this.sortedTimeslots().length > 0
+        ? this.sortedTimeslots()[this.sortedTimeslots().length-1].id + 1
+        : 1;
 
       const timeslot: ITimeSlot = {
         time: time,
         id: timeslotID,
         users: []
-      }
+      };
 
-      this.state.addTimeslot(card, timeslot)
+      this.state.addTimeslot(card, timeslot);
+
+      this.time.set('');
 
       console.log(timeslot.time + " wurde erflogreich erstellt.")
     } else {
