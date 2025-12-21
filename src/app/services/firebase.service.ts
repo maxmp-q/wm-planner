@@ -40,7 +40,7 @@ export class FirebaseService {
       const querySnapshot = await getDocs(collection(this.firestore, 'cards'));
       return querySnapshot.docs.map(doc => doc.data() as ICard);
     } catch (error) {
-      console.error('Fehler beim Abrufen der Users:', error);
+      console.error('Fehler beim Abrufen der Karten:', error);
       return [];
     }
   }
@@ -68,7 +68,7 @@ export class FirebaseService {
 
       console.log(`User ${user.firstname} ${user.lastname} erfolgreich gelöscht.`);
     } catch (error) {
-      console.error('Fehler beim Erstellen des Users:', error);
+      console.error('Fehler beim Löschen des Users:', error);
     }
   }
 
@@ -81,7 +81,24 @@ export class FirebaseService {
 
       console.log(`Karte ${card.title} wurde erfolgreich erstellt.`);
     } catch (error) {
-      console.error('Fehler beim Erstellen des Users:', error);
+      console.error('Fehler beim Erstellen der Karte:', error);
+    }
+  }
+
+  async renameCard(card: ICard){
+    try {
+      const cardRef = doc(this.firestore, 'cards', card.id.toString());
+      const cardSnap = await getDoc(cardRef);
+
+      if (!cardSnap.exists()) {
+        console.error("Card existiert nicht in Firestore");
+        return;
+      }
+
+      await updateDoc(cardRef, { title: card.title });
+      console.log(`Karte ${card.title} wurde erfolgreich umbenannt.`);
+    } catch (error){
+      console.error('Fehler beim Umbennen der Karte:', error);
     }
   }
 

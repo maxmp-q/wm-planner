@@ -22,7 +22,11 @@ export class Card {
   card = input<ICard>();
   timeslots = computed(() => this.card()?.timeSlots);
 
+  editMode = signal<boolean>(false);
   expanded = signal<boolean>(false);
+  showAdd = signal<boolean>(false);
+  time = signal<string>('');
+  newCardName = signal<string>('');
 
   sortedTimeslots = computed(() => {
     const timeslots = this.timeslots();
@@ -31,12 +35,19 @@ export class Card {
         .slice()
         .sort((a, b) => a.id - b.id);
     } else {
-      return []
+      return [];
     }
   });
 
-  showAdd = signal<boolean>(false);
-  time = signal<string>('');
+  openMenu(){
+    const card = this.card();
+    if(!this.editMode() && card){
+      this.newCardName.set(card.title)
+    } else if(card) {
+      this.state.renameCard({...card, title: this.newCardName()})
+    }
+    this.editMode.set(!this.editMode());
+  }
 
   submitForm(){
     const card = this.card();

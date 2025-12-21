@@ -36,82 +36,37 @@ export const AppState = signalStore(
 
       async createUser(user: IUser){
         await firestore.createUser(user);
-        patchState(state, {allUsers: [...state.allUsers(), user]});
+        await this.loadUsers();
       },
 
       async deleteUser(user: IUser){
         await firestore.deleteUser(user);
-
-        const updatedUsers = state.allUsers().filter(u => u.id !== user.id);
-        patchState(state, {allUsers: updatedUsers});
+        await this.loadUsers();
       },
 
       async addCard(card: ICard){
         await firestore.addCard(card);
+        await this.loadCards();
+      },
 
-        patchState(state, {cards: [...state.cards(), card]});
+      async renameCard(card: ICard){
+        await firestore.renameCard(card);
+        await this.loadCards();
       },
 
       async addTimeslot(card: ICard, timeslot: ITimeSlot) {
         await firestore.addTimeslot(card, timeslot);
-
-        const updatedCards = state.cards().map(c => {
-          if (c === card) {
-            return {
-              ...c,
-              timeSlots: [...c.timeSlots, timeslot]
-            };
-          }
-          return c;
-        });
-        patchState(state, { cards: updatedCards });
+        await this.loadCards();
       },
 
       async addUser(card: ICard, timeslot: ITimeSlot, user: IUser) {
         await firestore.addUser(card, timeslot, user);
-
-        const updatedCards = state.cards().map(c => {
-          if (c === card) {
-            return {
-              ...c,
-              timeSlots: c.timeSlots.map(ts => {
-                if (ts === timeslot) {
-                  return {
-                    ...ts,
-                    users: [...ts.users, user]
-                  };
-                }
-                return ts;
-              })
-            };
-          }
-          return c;
-        });
-        patchState(state, { cards: updatedCards });
+        await this.loadCards();
       },
 
       async removeUser(card: ICard, timeslot: ITimeSlot, user: IUser){
         await firestore.removeUser(card, timeslot, user);
-
-        const updatedCards = state.cards().map(c => {
-          if (c === card) {
-            return {
-              ...c,
-              timeSlots: c.timeSlots.map(ts => {
-                if (ts === timeslot) {
-                  return {
-                    ...ts,
-                    users: ts.users.filter(u => u.id !== user.id)
-                  };
-                }
-                return ts;
-              })
-            };
-          }
-          return c;
-        });
-
-        patchState(state, { cards: updatedCards });
+        await this.loadCards();
       }
     };
   })

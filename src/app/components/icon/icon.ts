@@ -2,7 +2,8 @@ import {Component, input} from '@angular/core';
 
 const icons = [
   "arrow_right",
-  "arrow_down"
+  "arrow_down",
+  "menu_dots"
 ]
 type IconType = typeof icons[number];
 
