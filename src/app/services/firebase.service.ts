@@ -91,7 +91,7 @@ export class FirebaseService {
       const cardSnap = await getDoc(cardRef);
 
       if (!cardSnap.exists()) {
-        console.error("Card existiert nicht in Firestore");
+        console.error("Karte existiert nicht in Firestore");
         return;
       }
 
@@ -123,7 +123,7 @@ export class FirebaseService {
       const cardSnap = await getDoc(cardRef);
 
       if (!cardSnap.exists()) {
-        console.error("Card existiert nicht in Firestore");
+        console.error("Karte existiert nicht in Firestore");
         return;
       }
 
@@ -146,7 +146,7 @@ export class FirebaseService {
       const cardSnap = await getDoc(cardRef);
 
       if (!cardSnap.exists()) {
-        console.error("Card existiert nicht in Firestore");
+        console.error("Karte existiert nicht in Firestore");
         return;
       }
 
@@ -167,6 +167,27 @@ export class FirebaseService {
       console.log("Erflogreich Timeslot umbenannt.")
     } catch (error) {
       console.error('Fehler beim Umbennen des Timeslots:', error);
+    }
+  }
+
+  async deleteTimeslot(card: ICard, timeslot: ITimeSlot){
+    try {
+      const cardRef = doc(this.firestore, 'cards', card.id.toString());
+      const cardSnap = await getDoc(cardRef);
+
+      if (!cardSnap.exists()) {
+        console.error("Karte existiert nicht in Firestore");
+        return;
+      }
+
+      const cardData = cardSnap.data() as ICard;
+
+      const updatedTimeSlots = cardData.timeSlots.filter(ts => ts.id !== timeslot.id);
+
+      await updateDoc(cardRef, { timeSlots: updatedTimeSlots });
+      console.log(`Erflogreich Timeslot ${timeslot.time} gelöscht.`)
+    } catch (error) {
+      console.error('Fehler beim Löschen des Timeslots:', error);
     }
   }
 
@@ -207,7 +228,7 @@ export class FirebaseService {
       const cardSnap = await getDoc(cardRef);
 
       if (!cardSnap.exists()) {
-        console.error("Card existiert nicht in Firestore");
+        console.error("Karte existiert nicht in Firestore");
         return;
       }
 

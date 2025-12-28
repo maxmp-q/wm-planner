@@ -74,4 +74,13 @@ export class TimeSlot {
 
     this.showDropdown.set(false);
   }
+
+  deleteTimeslot(){
+    const card = this.card();
+    const timeslot = this.timeSlot();
+
+    if(card && timeslot){
+      this.state.deleteTimeslot(card, timeslot);
+    }
+  }
 }

@@ -1,7 +1,6 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {AppState} from '../../store/state';
 import {ICard, ITimeSlot, IUser} from '../../interfaces/interfaces';
-import {Icon} from '../icon/icon';
 import {Dropdown} from '../dropdown/dropdown';
 
 interface UserExercise{
@@ -12,7 +11,6 @@ interface UserExercise{
 @Component({
   selector: 'app-user-summary',
   imports: [
-    Icon,
     Dropdown
   ],
   templateUrl: './user-summary.html',
