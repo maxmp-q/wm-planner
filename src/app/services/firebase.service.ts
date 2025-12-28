@@ -226,7 +226,7 @@ export class FirebaseService {
         if (ts.id === timeslot.id) {
           return {
             ...ts,
-            userIDs: [...ts.userIDs, user.id]
+            userIDs: ts.userIDs ? [...ts.userIDs, user.id] : [user.id]
           };
         }
         return ts;

@@ -38,7 +38,7 @@ export class TimeSlot {
 
     const timeslotUsers: IUser[] = [];
 
-    if(timeslot && allUsers){
+    if(timeslot && allUsers && timeslot.userIDs?.length > 0){
       timeslot.userIDs.forEach(id => {
         allUsers.forEach(user => {
           if(user.id === id){
@@ -49,7 +49,7 @@ export class TimeSlot {
     }
 
     return timeslotUsers;
-  })
+  });
 
   showDropdown = signal<boolean>(false);
   editMode = signal<boolean>(false);
@@ -76,7 +76,7 @@ export class TimeSlot {
     const timeslot = this.timeSlot();
 
     if(card && timeslot) {
-      if(!this.timeSlot()?.userIDs.includes(user.id)){
+      if(!timeslot.userIDs?.includes(user.id) || !timeslot.userIDs){
         this.state.addUser(
           card,
           timeslot,
