@@ -102,6 +102,18 @@ export class FirebaseService {
     }
   }
 
+  async deleteCard(card: ICard){
+    try {
+      const cardRef = doc(collection(this.firestore, 'cards'), card.id.toString());
+
+      await deleteDoc(cardRef);
+
+      console.log(`Karte ${card.title} erfolgreich gelöscht.`);
+    } catch (error) {
+      console.error('Fehler beim Löschen der Karte:', error);
+    }
+  }
+
   async addTimeslot(card: ICard, timeslot: ITimeSlot){
     try {
       // 1. Document-Referenz zur Karte

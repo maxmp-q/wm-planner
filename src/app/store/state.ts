@@ -54,6 +54,11 @@ export const AppState = signalStore(
         await this.loadCards();
       },
 
+      async deleteCard(card: ICard){
+        await firestore.deleteCard(card);
+        await this.loadCards();
+      },
+
       async addTimeslot(card: ICard, timeslot: ITimeSlot) {
         await firestore.addTimeslot(card, timeslot);
         await this.loadCards();

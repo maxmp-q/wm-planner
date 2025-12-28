@@ -49,6 +49,14 @@ export class Card {
     this.editMode.set(!this.editMode());
   }
 
+  deleteCard(){
+    const card = this.card();
+
+    if(card){
+      this.state.deleteCard(card)
+    }
+  }
+
   submitForm(){
     const card = this.card();
     const time = this.time();

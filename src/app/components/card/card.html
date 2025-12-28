@@ -2,6 +2,9 @@
   <div class="card-title">
     @if(editMode()){
       <input class="card-rename-input" type="text" [(ngModel)]="newCardName">
+      <button class="menu-button" (click)="deleteCard()">
+        <app-icon which="delete" viewbox="1024"/>
+      </button>
     } @else {
       <span (click)="toggleExpanded()">
       <app-icon [which]="expanded() ? 'arrow_down' : 'arrow_right'" />
@@ -14,7 +17,7 @@
   </div>
 
   @if(expanded()){
-    @for (timeSlot of card()?.timeSlots; track $index){
+    @for (timeSlot of card()?.timeSlots; track timeSlot.id){
       <app-time-slot [timeSlot]="timeSlot" [card]="card()" />
     }
     @if(showAdd()){
