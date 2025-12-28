@@ -1,5 +1,14 @@
-<div class="time-slot-card">
-  <span>{{ timeSlot()?.time }}</span>
+<section class="time-slot-card">
+  <div class="time-slot-title">
+    @if(editMode()){
+      <input class="time-slot-rename-input" type="text" [(ngModel)]="newTimeslotTime">
+    } @else {
+      <span>{{ timeSlot()?.time }}</span>
+    }
+    <button class="menu-button" (click)="openMenu()">
+      <app-icon which="menu_dots" height="20px" width="20px"/>
+    </button>
+  </div>
 
   <div class="time-slot-users">
     @for (user of timeSlot()?.users; track user.id) {
@@ -11,4 +20,4 @@
     title="User hinzufügen"
     (selectedCard)="addUser($event)"
   />
-</div>
+</section>

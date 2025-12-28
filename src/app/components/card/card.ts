@@ -42,9 +42,9 @@ export class Card {
   openMenu(){
     const card = this.card();
     if(!this.editMode() && card){
-      this.newCardName.set(card.title)
+      this.newCardName.set(card.title);
     } else if(card) {
-      this.state.renameCard({...card, title: this.newCardName()})
+      this.state.renameCard({...card, title: this.newCardName()});
     }
     this.editMode.set(!this.editMode());
   }

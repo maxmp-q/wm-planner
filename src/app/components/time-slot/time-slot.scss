@@ -17,10 +17,37 @@
 }
 
 // TimeSlot Zeit-Anzeige
-.time-slot-card > span {
-  font-size: 16px;
-  font-weight: 600;
-  color: $color-primary;
+.time-slot-title{
+
+  span {
+    font-size: 16px;
+    font-weight: 600;
+    color: $color-primary;
+  }
+
+  .time-slot-rename-input {
+    margin-top: 6px;
+    padding: 12px 14px;
+
+    background: $color-white;
+    border: 1px solid $color-secondary-tint;
+    border-radius: 8px;
+
+    font-size: 15px;
+    color: $color-primary-dark;
+
+    flex-grow: 1;
+
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+
+}
+
+.menu-button{
+  margin-left: auto;
+  border: none;
+  background: none;
+  flex-shrink: 0;
 }
 
 // User-Chips

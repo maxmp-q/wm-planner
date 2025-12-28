@@ -1,5 +1,8 @@
-<span (click)="showDetails()">{{user()?.firstname}} </span>
 @if(details()){
-  <span>{{user()?.lastname}} </span>
-  <button class="remove-user" (click)="removeUser()"> User von Timeslot entfernen</button>
+  <span class="user-name" (click)="showDetails()" > {{user()?.firstname}} {{user()?.lastname}}  </span>
+  <button class="remove-user" (click)="removeUser()">
+    <app-icon which="delete" viewbox="1024" height="16px" width="16px"/>
+  </button>
+} @else {
+  <span class="user-name"  (click)="showDetails()">{{user()?.firstname}} </span>
 }

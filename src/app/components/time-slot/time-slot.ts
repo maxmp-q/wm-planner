@@ -3,12 +3,16 @@ import {ITimeSlot, ICard, IUser} from '../../interfaces/interfaces';
 import {User} from '../user/user';
 import {AppState} from '../../store/state';
 import {Dropdown} from '../dropdown/dropdown';
+import {FormsModule} from '@angular/forms';
+import {Icon} from '../icon/icon';
 
 @Component({
   selector: 'app-time-slot',
   imports: [
     User,
-    Dropdown
+    Dropdown,
+    FormsModule,
+    Icon
   ],
   templateUrl: './time-slot.html',
   styleUrl: './time-slot.scss',
@@ -28,10 +32,24 @@ export class TimeSlot {
     );
   });
 
-  showDropdown = signal(false);
+  showDropdown = signal<boolean>(false);
+  editMode = signal<boolean>(false);
+  newTimeslotTime = signal<string>('');
 
   toggleDropdown() {
     this.showDropdown.set(!this.showDropdown());
+  }
+
+  openMenu(){
+    const card = this.card()
+    const timeslot = this.timeSlot();
+
+    if(!this.editMode() && timeslot){
+      this.newTimeslotTime.set(timeslot.time);
+    } else if(timeslot && card) {
+      this.state.renameTimeslot(card, {...timeslot, time: this.newTimeslotTime()});
+    }
+    this.editMode.set(!this.editMode());
   }
 
   addUser(user: IUser){
