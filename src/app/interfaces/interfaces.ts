@@ -7,7 +7,7 @@ export interface ICard {
 export interface ITimeSlot{
   time: string;
   id: number;
-  users: IUser[];
+  userIDs: number[];
 }
 
 export interface IUser{

@@ -34,8 +34,8 @@ export class UserSummary {
       cards.forEach(card => {
         if(card.timeSlots){
           card.timeSlots.forEach(timeslots => {
-            timeslots.users.forEach(user => {
-              if(user.id === currentUser.id){
+            timeslots.userIDs.forEach(id => {
+              if(id === currentUser.id){
                 userExercises.push({timeslot: timeslots, card: card});
               }
             })

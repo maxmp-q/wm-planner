@@ -65,10 +65,28 @@ export class FirebaseService {
       const userRef = doc(collection(this.firestore, 'allUsers'), user.id.toString());
 
       await deleteDoc(userRef);
+      await this.deleteUsersFromCards(user);
 
       console.log(`User ${user.firstname} ${user.lastname} erfolgreich gelöscht.`);
     } catch (error) {
       console.error('Fehler beim Löschen des Users:', error);
+    }
+  }
+
+  private async deleteUsersFromCards(user: IUser){
+    try {
+      const allCards = await this.getAllCards();
+
+      for(const card of allCards){
+        for(const ts of card.timeSlots){
+          if(ts.userIDs.some(id => id === user.id)){
+            await this.removeUser(card, ts, user);
+          }
+        }
+      }
+
+    } catch (error){
+      console.log(`Fehler beim Löschen des User ${user.firstname} aus den Karten`, error);
     }
   }
 
@@ -208,7 +226,7 @@ export class FirebaseService {
         if (ts.id === timeslot.id) {
           return {
             ...ts,
-            users: [...ts.users, user]
+            userIDs: [...ts.userIDs, user.id]
           };
         }
         return ts;
@@ -239,7 +257,7 @@ export class FirebaseService {
         if (ts.id === timeslot.id) {
           return {
             ...ts,
-            users: ts.users.filter(u => u.id !== user.id)
+            userIDs: ts.userIDs.filter( id => id !== user.id)
           };
         }
         return ts;

@@ -25,12 +25,31 @@ export class TimeSlot {
   allUsers = computed(()=> this.state.allUsers());
 
   availableUsers = computed(()=> {
-    const currentUsers = this.timeSlot()?.users ?? [];
+    const currentUsers = this.currentUsers();
 
     return this.allUsers().filter(
       user => !currentUsers.some(cu => cu.id === user.id)
     );
   });
+
+  currentUsers = computed(() => {
+    const timeslot = this.timeSlot();
+    const allUsers = this.allUsers();
+
+    const timeslotUsers: IUser[] = [];
+
+    if(timeslot && allUsers){
+      timeslot.userIDs.forEach(id => {
+        allUsers.forEach(user => {
+          if(user.id === id){
+            timeslotUsers.push(user);
+          }
+        })
+      })
+    }
+
+    return timeslotUsers;
+  })
 
   showDropdown = signal<boolean>(false);
   editMode = signal<boolean>(false);
@@ -57,7 +76,7 @@ export class TimeSlot {
     const timeslot = this.timeSlot();
 
     if(card && timeslot) {
-      if(!this.timeSlot()?.users.includes(user)){
+      if(!this.timeSlot()?.userIDs.includes(user.id)){
         this.state.addUser(
           card,
           timeslot,

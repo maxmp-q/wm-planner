@@ -21,7 +21,7 @@ export const AppState = signalStore(
     initialState
   ),
   withMethods(state => {
-    const firestore = inject(FirebaseService)
+    const firestore = inject(FirebaseService);
 
     return {
       async loadUsers(){
@@ -42,6 +42,7 @@ export const AppState = signalStore(
       async deleteUser(user: IUser){
         await firestore.deleteUser(user);
         await this.loadUsers();
+        await this.loadCards();
       },
 
       async addCard(card: ICard){

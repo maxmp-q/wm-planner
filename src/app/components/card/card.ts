@@ -69,7 +69,7 @@ export class Card {
       const timeslot: ITimeSlot = {
         time: time,
         id: timeslotID,
-        users: []
+        userIDs: []
       };
 
       this.state.addTimeslot(card, timeslot);
