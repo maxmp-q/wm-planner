@@ -2,17 +2,20 @@ import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
 import {ICard, ITimeSlot, IUser} from '../interfaces/interfaces';
 import { inject} from '@angular/core';
 import {FirebaseService} from '../services/firebase.service';
+import {PasswortService} from '../services/passwort.service';
 
 interface State{
   heading: string;
   cards: ICard[];
   allUsers: IUser[];
+  loggedIn: boolean;
 }
 
 const initialState: State = {
   heading: 'Weihnachtsmarkt 2025',
   cards: [],
-  allUsers: []
+  allUsers: [],
+  loggedIn: false
 }
 
 export const AppState = signalStore(
@@ -22,6 +25,7 @@ export const AppState = signalStore(
   ),
   withMethods(state => {
     const firestore = inject(FirebaseService);
+    const passwort = inject(PasswortService);
 
     return {
       async loadUsers(){
@@ -83,6 +87,11 @@ export const AppState = signalStore(
       async removeUser(card: ICard, timeslot: ITimeSlot, user: IUser){
         await firestore.removeUser(card, timeslot, user);
         await this.loadCards();
+      },
+
+      async loginToApp(value: string){
+        const login = await passwort.hashSHA256(value) === "21ed5e9a3209d5079164297d668062fd44442eb7ff5ac52055ee9889370a4f4f";
+        patchState(state, {loggedIn: login});
       }
     };
   })
