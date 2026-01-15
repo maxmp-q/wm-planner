@@ -33,12 +33,14 @@ export class UserSummary {
     if(currentUser){
       cards.forEach(card => {
         if(card.timeSlots){
-          card.timeSlots.forEach(timeslots => {
-            timeslots.userIDs.forEach(id => {
-              if(id === currentUser.id){
-                userExercises.push({timeslot: timeslots, card: card});
-              }
-            })
+          card.timeSlots.forEach(timeslot => {
+            if(timeslot.userIDs){
+              timeslot.userIDs.forEach(id => {
+                if(id === currentUser.id){
+                  userExercises.push({timeslot: timeslot, card: card});
+                }
+              })
+            }
           })
         }
       })
