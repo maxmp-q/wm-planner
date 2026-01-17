@@ -9,22 +9,16 @@
 }
 
 .open-dropdown-button {
-  display: flex;
-  align-content: center;
   padding: 10px 16px;
-  justify-content: center;
   background: $color-primary-light;
   color: $color-white;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
   font-weight: 600;
-  transition: background 0.2s, box-shadow 0.2s;
 }
 
 .open-dropdown-button:hover {
   background: $color-accent-dark;
-  box-shadow: $shadow-medium;
 }
 
 .dropdown {

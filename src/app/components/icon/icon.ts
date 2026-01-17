@@ -6,7 +6,14 @@ const icons = [
   "menu_dots",
   "delete"
 ]
-type IconType = typeof icons[number];
+export type IconType = (typeof icons)[number];
+
+const viewboxes: Record<IconType, string> = {
+  "arrow_right" : "0 0 16 16",
+  "arrow_down" : "0 0 16 16",
+  "menu_dots" : "0 0 16 16",
+  "delete": "0 0 1024 1024"
+}
 
 @Component({
   selector: 'app-icon',
@@ -15,17 +22,8 @@ type IconType = typeof icons[number];
   styleUrl: './icon.scss',
 })
 export class Icon {
-  which = input<IconType>();
+  which = input<IconType>('');
   height = input<string>('24px');
   width = input<string>('24px');
-  viewbox = input<string>('16');
-
-  _viewbox = computed(() => {
-    switch(this.viewbox()){
-      case '16': return '0 0 16 16';
-      case '24': return '0 0 24 24';
-      case '1024': return '0 0 1024 1024';
-      default: return '0 0 16 16';
-    }
-  })
+  viewbox = computed(()=> viewboxes[this.which()] ?? "0 0 16 16");
 }

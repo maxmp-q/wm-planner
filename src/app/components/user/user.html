@@ -1,7 +1,7 @@
 @if(details()){
   <span class="user-name" (click)="showDetails()" > {{user()?.firstname}} {{user()?.lastname}}  </span>
   <button class="remove-user" (click)="removeUser()">
-    <app-icon which="delete" viewbox="1024" height="16px" width="16px"/>
+    <app-icon which="delete" height="16px" width="16px"/>
   </button>
 } @else {
   <span class="user-name"  (click)="showDetails()">{{user()?.firstname}} </span>

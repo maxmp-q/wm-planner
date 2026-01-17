@@ -3,10 +3,10 @@
     @if(editMode()){
       <input class="time-slot-rename-input" type="text" [(ngModel)]="newTimeslotTime">
       <button class="menu-button" (click)="deleteTimeslot()">
-        <app-icon which="delete" viewbox="1024"/>
+        <app-icon which="delete"/>
       </button>
     } @else {
-      <span>{{ timeSlot()?.time }}</span>
+      <span class="time-slot-time">{{ timeSlot()?.time }}</span>
     }
     <button class="menu-button" (click)="openMenu()">
       <app-icon which="menu_dots" height="20px" width="20px"/>

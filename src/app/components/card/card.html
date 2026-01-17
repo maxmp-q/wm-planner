@@ -3,7 +3,7 @@
     @if(editMode()){
       <input class="card-rename-input" type="text" [(ngModel)]="newCardName">
       <button class="menu-button" (click)="deleteCard()">
-        <app-icon which="delete" viewbox="1024"/>
+        <app-icon which="delete"/>
       </button>
     } @else {
       <span (click)="toggleExpanded()">
