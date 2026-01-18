@@ -25,11 +25,12 @@
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",
     "@angular/core": "^21.1.0",
+    "@angular/fire": "^21.0.0-rc.0",
     "@angular/forms": "^21.1.0",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
     "@ngrx/signals": "^21.0.1",
-    "firebase": "^12.6.0",
+    "firebase": "^12.8.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -47,5 +48,8 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.9.2"
+  },
+  "volta": {
+    "node": "24.13.0"
   }
 }

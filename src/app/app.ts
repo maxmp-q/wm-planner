@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import {Header} from './components/header/header';
 import {AppState} from './store/state';
 import {FormsModule} from '@angular/forms';
+import { getFunctions, httpsCallable } from '@angular/fire/functions';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,13 @@ export class App implements OnInit {
   ngOnInit() {
     this.state.loadUsers();
     this.state.loadCards();
+    const functions = getFunctions();
+    const helloFn = httpsCallable(functions, 'hello');
+
+    helloFn({}).then(result => {
+      // @ts-ignore
+      console.log(result.data.text);
+    });
   }
 
   constructor() {
