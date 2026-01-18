@@ -21,9 +21,42 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+interface FirebaseData<T>{
+  data: T | undefined,
+  ref: any
+}
+
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
   public firestore: Firestore = getFirestore(app);
+
+  /**
+   * This function is used to get data from firebase. T is used to get the right
+   * type back and while having the support of ts.
+   *
+   * @param collection is the collection name in firebase.
+   * @param id is the id in the collection
+   * @private
+   */
+  private async getData<T>(
+    collection: string,
+    id: string
+  ): Promise<FirebaseData<T>>{
+    try {
+      const ref = doc(this.firestore, collection, id);
+      const snap= await getDoc(ref);
+
+      if (!snap.exists()) {
+        console.error("Passwort existiert nicht in Firestore");
+        return {data: undefined, ref: ref};
+      }
+
+      return {data: snap.data() as unknown as T, ref: ref};
+    } catch (error) {
+      console.error('Fehler beim Abrufen des Passworts:', error);
+      return {data: undefined, ref: undefined};
+    }
+  }
 
   async getAllUsers(): Promise<IUser[]> {
     try {
@@ -47,12 +80,9 @@ export class FirebaseService {
 
   async createUser(user: IUser) {
     try {
-      // Referenz auf die "users"-Collection und Dokument mit user.id
       const userRef = doc(collection(this.firestore, 'allUsers'), user.id.toString());
 
-      // Schreibe das User-Objekt in Firestore
       await setDoc(userRef, user);
-
       console.log(`User ${user.firstname} ${user.lastname} erfolgreich gespeichert.`);
     } catch (error) {
       console.error('Fehler beim Erstellen des Users:', error);
@@ -61,12 +91,10 @@ export class FirebaseService {
 
   async deleteUser(user: IUser) {
     try {
-      // Referenz auf die "users"-Collection und Dokument mit user.id
       const userRef = doc(collection(this.firestore, 'allUsers'), user.id.toString());
 
       await deleteDoc(userRef);
       await this.deleteUsersFromCards(user);
-
       console.log(`User ${user.firstname} ${user.lastname} erfolgreich gelöscht.`);
     } catch (error) {
       console.error('Fehler beim Löschen des Users:', error);
@@ -92,7 +120,6 @@ export class FirebaseService {
 
   async addCard(card: ICard){
     try {
-      // Referenz auf die "users"-Collection und Dokument mit user.id
       const cardRef = doc(collection(this.firestore, 'cards'), card.id.toString());
 
       await setDoc(cardRef, card);
@@ -125,7 +152,6 @@ export class FirebaseService {
       const cardRef = doc(collection(this.firestore, 'cards'), card.id.toString());
 
       await deleteDoc(cardRef);
-
       console.log(`Karte ${card.title} erfolgreich gelöscht.`);
     } catch (error) {
       console.error('Fehler beim Löschen der Karte:', error);
@@ -134,25 +160,16 @@ export class FirebaseService {
 
   async addTimeslot(card: ICard, timeslot: ITimeSlot){
     try {
-      // 1. Document-Referenz zur Karte
-      const cardRef = doc(this.firestore, 'cards', card.id.toString());
+      const cardData: FirebaseData<ICard> = await this.getData('cards', card.id.toString());
 
-      // 2. Karte aus Firestore laden
-      const cardSnap = await getDoc(cardRef);
+      if(cardData.data){
+        const updatedTimeSlots = [...cardData.data.timeSlots, timeslot];
 
-      if (!cardSnap.exists()) {
-        console.error("Karte existiert nicht in Firestore");
-        return;
+        await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
+        console.log(`Erflogreich Timeslot ${timeslot.time} erstellt.`);
+      } else {
+        console.log(`Timeslot ${timeslot.time} nicht gefunden.`);
       }
-
-      const cardData = cardSnap.data() as ICard;
-
-      // 3. neuen Timeslot ins Array pushen
-      const updatedTimeSlots = [...cardData.timeSlots, timeslot];
-
-      // 4. Update speichern
-      await updateDoc(cardRef, { timeSlots: updatedTimeSlots });
-
     } catch (error) {
       console.error('Fehler beim Erstellen des Timeslots:', error);
     }
@@ -160,29 +177,24 @@ export class FirebaseService {
 
   async renameTimeslot(card: ICard, timeslot: ITimeSlot){
     try {
-      const cardRef = doc(this.firestore, 'cards', card.id.toString());
-      const cardSnap = await getDoc(cardRef);
+      const cardData: FirebaseData<ICard> = await this.getData('cards', card.id.toString());
 
-      if (!cardSnap.exists()) {
-        console.error("Karte existiert nicht in Firestore");
-        return;
+      if(cardData.data){
+        const updatedTimeSlots = cardData.data.timeSlots.map(ts => {
+          if (ts.id === timeslot.id) {
+            return {
+              ...ts,
+              time: timeslot.time
+            };
+          }
+          return ts;
+        });
+
+        await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
+        console.log(`Erflogreich Timeslot ${timeslot.time} umbenannt.`);
+      } else {
+        console.log(`Timeslot ${timeslot.time} nicht gefunden.`);
       }
-
-      const cardData = cardSnap.data() as ICard;
-
-      // === Timeslot updaten ===
-      const updatedTimeSlots = cardData.timeSlots.map(ts => {
-        if (ts.id === timeslot.id) {
-          return {
-            ...ts,
-            time: timeslot.time
-          };
-        }
-        return ts;
-      });
-
-      await updateDoc(cardRef, { timeSlots: updatedTimeSlots });
-      console.log("Erflogreich Timeslot umbenannt.")
     } catch (error) {
       console.error('Fehler beim Umbennen des Timeslots:', error);
     }
@@ -190,20 +202,16 @@ export class FirebaseService {
 
   async deleteTimeslot(card: ICard, timeslot: ITimeSlot){
     try {
-      const cardRef = doc(this.firestore, 'cards', card.id.toString());
-      const cardSnap = await getDoc(cardRef);
+      const cardData: FirebaseData<ICard> = await this.getData('cards', card.id.toString());
 
-      if (!cardSnap.exists()) {
-        console.error("Karte existiert nicht in Firestore");
-        return;
+      if(cardData.data){
+        const updatedTimeSlots = cardData.data.timeSlots.filter(ts => ts.id !== timeslot.id);
+
+        await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
+        console.log(`Erflogreich Timeslot ${timeslot.time} gelöscht.`);
+      } else {
+        console.log(`Timeslot ${timeslot.time} nicht gefunden.`);
       }
-
-      const cardData = cardSnap.data() as ICard;
-
-      const updatedTimeSlots = cardData.timeSlots.filter(ts => ts.id !== timeslot.id);
-
-      await updateDoc(cardRef, { timeSlots: updatedTimeSlots });
-      console.log(`Erflogreich Timeslot ${timeslot.time} gelöscht.`)
     } catch (error) {
       console.error('Fehler beim Löschen des Timeslots:', error);
     }
@@ -211,30 +219,24 @@ export class FirebaseService {
 
   async addUser(card: ICard, timeslot: ITimeSlot, user: IUser){
     try {
-      const cardRef = doc(this.firestore, 'cards', card.id.toString());
-      const cardSnap = await getDoc(cardRef);
+      const cardData: FirebaseData<ICard> = await this.getData('cards', card.id.toString());
 
-      if (!cardSnap.exists()) {
-        console.error("Card existiert nicht in Firestore");
-        return;
+      if(cardData.data){
+        const updatedTimeSlots = cardData.data.timeSlots.map(ts => {
+          if (ts.id === timeslot.id) {
+            return {
+              ...ts,
+              userIDs: ts.userIDs ? [...ts.userIDs, user.id] : [user.id]
+            };
+          }
+          return ts;
+        });
+
+        await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
+        console.log(`User ${user.firstname} erfolgreich hinzugefügt.`);
+      } else {
+        console.log(`User ${user.firstname} wurde nicht gefunden.`);
       }
-
-      const cardData = cardSnap.data() as ICard;
-
-      // === Timeslot updaten ===
-      const updatedTimeSlots = cardData.timeSlots.map(ts => {
-        if (ts.id === timeslot.id) {
-          return {
-            ...ts,
-            userIDs: ts.userIDs ? [...ts.userIDs, user.id] : [user.id]
-          };
-        }
-        return ts;
-      });
-
-      await updateDoc(cardRef, { timeSlots: updatedTimeSlots });
-
-      console.log(`User ${user.firstname} erfolgreich hinzugefügt.`);
     } catch (error) {
       console.error('Fehler beim Erstellen des Users:', error);
     }
@@ -242,30 +244,25 @@ export class FirebaseService {
 
   async removeUser(card: ICard, timeslot: ITimeSlot, user: IUser){
     try {
-      const cardRef = doc(this.firestore, 'cards', card.id.toString());
-      const cardSnap = await getDoc(cardRef);
+      const cardData: FirebaseData<ICard> = await this.getData<ICard>('cards', card.id.toString());
 
-      if (!cardSnap.exists()) {
-        console.error("Karte existiert nicht in Firestore");
-        return;
+      if(cardData.data){
+        const updatedTimeSlots = cardData.data.timeSlots.map(ts => {
+          if (ts.id === timeslot.id) {
+            return {
+              ...ts,
+              userIDs: ts.userIDs.filter( id => id !== user.id)
+            };
+          }
+          return ts;
+        });
+
+        await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
+
+        console.log(`User ${user.firstname} erfolgreich gelöscht.`);
+      } else {
+        console.log(`User ${user.firstname} wurde nicht gefunden.`)
       }
-
-      const cardData = cardSnap.data() as ICard;
-
-      // === Timeslot updaten ===
-      const updatedTimeSlots = cardData.timeSlots.map(ts => {
-        if (ts.id === timeslot.id) {
-          return {
-            ...ts,
-            userIDs: ts.userIDs.filter( id => id !== user.id)
-          };
-        }
-        return ts;
-      });
-
-      await updateDoc(cardRef, { timeSlots: updatedTimeSlots });
-
-      console.log(`User ${user.firstname} erfolgreich gelöscht.`);
     } catch (error) {
       console.error('Fehler beim Erstellen des Users:', error);
     }
@@ -273,16 +270,8 @@ export class FirebaseService {
 
   async getHeading(): Promise<string> {
     try {
-      const headingRef = doc(this.firestore, 'heading', "1");
-      const headingSnap= await getDoc(headingRef);
-
-      if (!headingSnap.exists()) {
-        console.error("Header existiert nicht in Firestore");
-        return '';
-      }
-
-      const headingData = headingSnap.data() as unknown as Record<string, string>;
-      return headingData["heading"];
+      const headingData: FirebaseData<Record<string, string>> = await this.getData<Record<string, string>>('heading', '1');
+      return headingData.data ? headingData.data["heading"] : '';
     } catch (error) {
       console.error('Fehler beim Abrufen des Headers:', error);
       return '';
@@ -291,19 +280,11 @@ export class FirebaseService {
 
   async getPasswortHash(): Promise<string> {
     try {
-      const passwortRef = doc(this.firestore, 'passwort', "1");
-      const passwortSnap= await getDoc(passwortRef);
-
-      if (!passwortSnap.exists()) {
-        console.error("Passwort existiert nicht in Firestore");
-        return '';
-      }
-
-      const passwortData = passwortSnap.data() as unknown as Record<string, string>;
-      return passwortData["passwort"];
+      const passwortData: FirebaseData<Record<string, string>> = await this.getData<Record<string, string>>('passwort', '1');
+      return passwortData.data ? passwortData.data["passwort"] : 'error';
     } catch (error) {
       console.error('Fehler beim Abrufen des Passworts:', error);
-      return '';
+      return 'error';
     }
   }
 }

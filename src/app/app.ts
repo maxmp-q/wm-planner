@@ -13,7 +13,7 @@ import {FormsModule} from '@angular/forms';
 export class App implements OnInit {
   state = inject(AppState);
 
-  passwort = signal<string>('');
+  password = signal<string>('');
   login = computed(this.state.loggedIn);
 
   ngOnInit() {
@@ -24,7 +24,7 @@ export class App implements OnInit {
 
   constructor() {
     effect(() => {
-      const passwort = this.passwort();
+      const passwort = this.password();
       this.state.loginToApp(passwort);
     })
   }
