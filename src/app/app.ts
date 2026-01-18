@@ -19,6 +19,7 @@ export class App implements OnInit {
   ngOnInit() {
     this.state.loadUsers();
     this.state.loadCards();
+    this.state.loadHeading();
   }
 
   constructor() {

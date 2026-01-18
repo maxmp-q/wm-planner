@@ -12,7 +12,7 @@ interface State{
 }
 
 const initialState: State = {
-  heading: 'Weihnachtsmarkt 2025',
+  heading: '',
   cards: [],
   allUsers: [],
   loggedIn: false
@@ -28,70 +28,80 @@ export const AppState = signalStore(
     const passwort = inject(PasswortService);
 
     return {
-      async loadUsers(){
+      async loadUsers() {
         const users = await firestore.getAllUsers();
         patchState(state, {allUsers: users});
       },
 
-      async loadCards(){
+      async loadCards() {
         const cards = await firestore.getAllCards();
         patchState(state, {cards: cards});
       },
 
+      async loadHeading() {
+        const heading = await firestore.getHeading();
+        patchState(state, {heading: heading});
+      },
+
+      async loginToApp(value: string) {
+        const login = await firestore.getPasswortHash() === await passwort.hashSHA256(value);
+        patchState(state, {loggedIn: login});
+      },
+    }
+  }),
+  withMethods(state => {
+    const firestore = inject(FirebaseService);
+
+    return {
       async createUser(user: IUser){
         await firestore.createUser(user);
-        await this.loadUsers();
+        await state.loadUsers();
       },
 
       async deleteUser(user: IUser){
         await firestore.deleteUser(user);
-        await this.loadUsers();
-        await this.loadCards();
+        await state.loadUsers();
+        await state.loadCards();
       },
 
       async addCard(card: ICard){
         await firestore.addCard(card);
-        await this.loadCards();
+        await state.loadCards();
       },
 
       async renameCard(card: ICard){
         await firestore.renameCard(card);
-        await this.loadCards();
+        await state.loadCards();
       },
 
       async deleteCard(card: ICard){
         await firestore.deleteCard(card);
-        await this.loadCards();
+        await state.loadCards();
       },
 
       async addTimeslot(card: ICard, timeslot: ITimeSlot) {
         await firestore.addTimeslot(card, timeslot);
-        await this.loadCards();
+        await state.loadCards();
       },
 
       async renameTimeslot(card: ICard, timeslot: ITimeSlot){
         await firestore.renameTimeslot(card, timeslot);
-        await this.loadCards();
+        await state.loadCards();
       },
 
       async deleteTimeslot(card: ICard, timeslot: ITimeSlot){
         await firestore.deleteTimeslot(card, timeslot);
-        await this.loadCards();
+        await state.loadCards();
       },
 
       async addUser(card: ICard, timeslot: ITimeSlot, user: IUser) {
         await firestore.addUser(card, timeslot, user);
-        await this.loadCards();
+        await state.loadCards();
       },
 
       async removeUser(card: ICard, timeslot: ITimeSlot, user: IUser){
         await firestore.removeUser(card, timeslot, user);
-        await this.loadCards();
-      },
-
-      async loginToApp(value: string){
-        const login = await passwort.hashSHA256(value) === "21ed5e9a3209d5079164297d668062fd44442eb7ff5ac52055ee9889370a4f4f";
-        patchState(state, {loggedIn: login});
+        await state.loadCards();
       }
     };
   })

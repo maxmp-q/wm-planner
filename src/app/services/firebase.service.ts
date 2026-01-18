@@ -5,13 +5,13 @@ import {
   deleteDoc,
   doc,
   Firestore,
+  getDoc,
   getDocs,
   getFirestore,
   setDoc,
-  getDoc,
   updateDoc
 } from 'firebase/firestore';
-import {ICard, IUser, ITimeSlot} from '../interfaces/interfaces';
+import {ICard, ITimeSlot, IUser} from '../interfaces/interfaces';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCYCxnkC8-LftaF-cn-zzZ3W62ZZwELpR8",
@@ -268,6 +268,42 @@ export class FirebaseService {
       console.log(`User ${user.firstname} erfolgreich gelöscht.`);
     } catch (error) {
       console.error('Fehler beim Erstellen des Users:', error);
+    }
+  }
+
+  async getHeading(): Promise<string> {
+    try {
+      const headingRef = doc(this.firestore, 'heading', "1");
+      const headingSnap= await getDoc(headingRef);
+
+      if (!headingSnap.exists()) {
+        console.error("Header existiert nicht in Firestore");
+        return '';
+      }
+
+      const headingData = headingSnap.data() as unknown as Record<string, string>;
+      return headingData["heading"];
+    } catch (error) {
+      console.error('Fehler beim Abrufen des Headers:', error);
+      return '';
+    }
+  }
+
+  async getPasswortHash(): Promise<string> {
+    try {
+      const passwortRef = doc(this.firestore, 'passwort', "1");
+      const passwortSnap= await getDoc(passwortRef);
+
+      if (!passwortSnap.exists()) {
+        console.error("Passwort existiert nicht in Firestore");
+        return '';
+      }
+
+      const passwortData = passwortSnap.data() as unknown as Record<string, string>;
+      return passwortData["passwort"];
+    } catch (error) {
+      console.error('Fehler beim Abrufen des Passworts:', error);
+      return '';
     }
   }
 }
