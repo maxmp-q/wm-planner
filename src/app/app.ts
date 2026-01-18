@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import {Header} from './components/header/header';
 import {AppState} from './store/state';
 import {FormsModule} from '@angular/forms';
+import {Toaster} from './components/toaster/toaster';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, FormsModule],
+  imports: [RouterOutlet, Header, FormsModule, Toaster],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

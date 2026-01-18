@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {initializeApp} from 'firebase/app';
 import {
   collection,
@@ -12,6 +12,7 @@ import {
   updateDoc
 } from 'firebase/firestore';
 import {ICard, ITimeSlot, IUser} from '../interfaces/interfaces';
+import {ToasterState} from '../store/toaster';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCYCxnkC8-LftaF-cn-zzZ3W62ZZwELpR8",
@@ -29,6 +30,7 @@ interface FirebaseData<T>{
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
   public firestore: Firestore = getFirestore(app);
+  toaster = inject(ToasterState);
 
   /**
    * This function is used to get data from firebase. T is used to get the right
@@ -47,13 +49,13 @@ export class FirebaseService {
       const snap= await getDoc(ref);
 
       if (!snap.exists()) {
-        console.error("Passwort existiert nicht in Firestore");
+        console.error("Daten existiert nicht in Firestore");
         return {data: undefined, ref: ref};
       }
 
       return {data: snap.data() as unknown as T, ref: ref};
     } catch (error) {
-      console.error('Fehler beim Abrufen des Passworts:', error);
+      console.error('Fehler beim Abrufen der Daten:', error);
       return {data: undefined, ref: undefined};
     }
   }
@@ -83,8 +85,9 @@ export class FirebaseService {
       const userRef = doc(collection(this.firestore, 'allUsers'), user.id.toString());
 
       await setDoc(userRef, user);
-      console.log(`User ${user.firstname} ${user.lastname} erfolgreich gespeichert.`);
+      this.toaster.show(`User ${user.firstname} ${user.lastname} erfolgreich erstellt.`);
     } catch (error) {
+      this.toaster.show(`Es gab einen Fehler beim Erstellen des User ${user.firstname} ${user.lastname}`);
       console.error('Fehler beim Erstellen des Users:', error);
     }
   }
@@ -95,8 +98,9 @@ export class FirebaseService {
 
       await deleteDoc(userRef);
       await this.deleteUsersFromCards(user);
-      console.log(`User ${user.firstname} ${user.lastname} erfolgreich gelöscht.`);
+      this.toaster.show(`User ${user.firstname} ${user.lastname} erfolgreich gelöscht.`)
     } catch (error) {
+      this.toaster.show(`Fehler beim Löschen des User ${user.firstname} ${user.lastname}.`)
       console.error('Fehler beim Löschen des Users:', error);
     }
   }
@@ -114,7 +118,8 @@ export class FirebaseService {
       }
 
     } catch (error){
-      console.log(`Fehler beim Löschen des User ${user.firstname} aus den Karten`, error);
+      this.toaster.show(`Fehler beim Löschen des User ${user.firstname} ${user.lastname} aus den Karten.`)
+      console.error(`Fehler beim Löschen des User ${user.firstname} aus den Karten`, error);
     }
   }
 
@@ -124,8 +129,9 @@ export class FirebaseService {
 
       await setDoc(cardRef, card);
 
-      console.log(`Karte ${card.title} wurde erfolgreich erstellt.`);
+      this.toaster.show(`Karte ${card.title} wurde erfolgreich hinzugefügt.`)
     } catch (error) {
+      this.toaster.show(`Fehler beim Hinzufügen der Karte ${card.title}.`)
       console.error('Fehler beim Erstellen der Karte:', error);
     }
   }
@@ -141,8 +147,9 @@ export class FirebaseService {
       }
 
       await updateDoc(cardRef, { title: card.title });
-      console.log(`Karte ${card.title} wurde erfolgreich umbenannt.`);
+      this.toaster.show(`Karte ${card.title} wurde erfolgreich umbenannt.`);
     } catch (error){
+      this.toaster.show(`Fehler beim Umbennen der Karte ${card.title}`);
       console.error('Fehler beim Umbennen der Karte:', error);
     }
   }
@@ -152,8 +159,9 @@ export class FirebaseService {
       const cardRef = doc(collection(this.firestore, 'cards'), card.id.toString());
 
       await deleteDoc(cardRef);
-      console.log(`Karte ${card.title} erfolgreich gelöscht.`);
+      this.toaster.show(`Karte ${card.title} erfolgreich gelöscht.`);
     } catch (error) {
+      this.toaster.show('Fehler beim Löschen der Karte:');
       console.error('Fehler beim Löschen der Karte:', error);
     }
   }
@@ -166,11 +174,12 @@ export class FirebaseService {
         const updatedTimeSlots = [...cardData.data.timeSlots, timeslot];
 
         await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
-        console.log(`Erflogreich Timeslot ${timeslot.time} erstellt.`);
+        this.toaster.show(`Timeslot ${timeslot.time} erfolgreich erstellt.`);
       } else {
-        console.log(`Timeslot ${timeslot.time} nicht gefunden.`);
+        this.toaster.show(`Timeslot ${timeslot.time} nicht gefunden.`);
       }
     } catch (error) {
+      this.toaster.show('Fehler beim Erstellen des Timeslots.');
       console.error('Fehler beim Erstellen des Timeslots:', error);
     }
   }
@@ -191,11 +200,12 @@ export class FirebaseService {
         });
 
         await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
-        console.log(`Erflogreich Timeslot ${timeslot.time} umbenannt.`);
+        this.toaster.show(`Timeslot ${timeslot.time} erfolgreich umbenannt.`);
       } else {
-        console.log(`Timeslot ${timeslot.time} nicht gefunden.`);
+        this.toaster.show(`Timeslot ${timeslot.time} nicht gefunden.`);
       }
     } catch (error) {
+      this.toaster.show('Fehler beim Umbennen des Timeslots.');
       console.error('Fehler beim Umbennen des Timeslots:', error);
     }
   }
@@ -208,11 +218,12 @@ export class FirebaseService {
         const updatedTimeSlots = cardData.data.timeSlots.filter(ts => ts.id !== timeslot.id);
 
         await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
-        console.log(`Erflogreich Timeslot ${timeslot.time} gelöscht.`);
+        this.toaster.show(`Timeslot ${timeslot.time} erfolgreich gelöscht.`);
       } else {
-        console.log(`Timeslot ${timeslot.time} nicht gefunden.`);
+        this.toaster.show(`Timeslot ${timeslot.time} nicht gefunden.`);
       }
     } catch (error) {
+      this.toaster.show('Fehler beim Löschen des Timeslots.');
       console.error('Fehler beim Löschen des Timeslots:', error);
     }
   }
@@ -233,11 +244,12 @@ export class FirebaseService {
         });
 
         await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
-        console.log(`User ${user.firstname} erfolgreich hinzugefügt.`);
+        this.toaster.show(`User ${user.firstname} erfolgreich hinzugefügt.`);
       } else {
-        console.log(`User ${user.firstname} wurde nicht gefunden.`);
+        this.toaster.show(`User ${user.firstname} wurde nicht gefunden.`);
       }
     } catch (error) {
+      this.toaster.show('Fehler beim Erstellen des Users.');
       console.error('Fehler beim Erstellen des Users:', error);
     }
   }
@@ -259,12 +271,13 @@ export class FirebaseService {
 
         await updateDoc(cardData.ref, { timeSlots: updatedTimeSlots });
 
-        console.log(`User ${user.firstname} erfolgreich gelöscht.`);
+        this.toaster.show(`User ${user.firstname} erfolgreich entfernt.`);
       } else {
-        console.log(`User ${user.firstname} wurde nicht gefunden.`)
+        this.toaster.show(`User ${user.firstname} wurde nicht gefunden.`)
       }
     } catch (error) {
-      console.error('Fehler beim Erstellen des Users:', error);
+      this.toaster.show('Fehler beim Entfernen des Users.');
+      console.error('Fehler beim Entfernen des Users:', error);
     }
   }
 
