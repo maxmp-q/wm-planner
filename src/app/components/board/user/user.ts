@@ -1,7 +1,7 @@
 import {Component, inject, input, signal} from '@angular/core';
-import {ICard, ITimeSlot, IUser} from '../../interfaces/interfaces';
-import {AppState} from '../../store/state';
-import {Icon} from '../icon/icon';
+import {ICard, ITimeSlot, IUser} from '../../../interfaces/interfaces';
+import {AppState} from '../../../store/state';
+import {Icon} from '../../icon/icon';
 
 @Component({
   selector: 'app-user',

@@ -1,15 +1,18 @@
 <section class="card">
   <div class="card-title">
     @if(editMode()){
-      <input class="card-rename-input" type="text" [(ngModel)]="newCardName">
+      <input class="rename-input" type="text" [(ngModel)]="newCardName">
       <button class="menu-button" (click)="deleteCard()">
         <app-icon which="delete"/>
       </button>
     } @else {
-      <span (click)="toggleExpanded()">
-      <app-icon [which]="expanded() ? 'arrow_down' : 'arrow_right'" />
+      <span class="card-name" (click)="toggleExpanded()">
+        <app-icon [which]="expanded() ? 'arrow_down' : 'arrow_right'"
+                  height="12"
+                  width="12"
+        />
         {{card()?.title}}
-    </span>
+      </span>
     }
     <button class="menu-button" (click)="openMenu()">
       <app-icon which="menu_dots" height="20px" width="20px"/>
@@ -21,12 +24,12 @@
       <app-time-slot [timeSlot]="timeSlot" [card]="card()" />
     }
     @if(showAdd()){
-      <div class="add-timeslot-form">
-        <label>
+      <div class="add-form">
+        <label class="add-form-label">
           Timeslot Name
-          <input type="text" [(ngModel)]="time">
+          <input class="add-form-input" type="text" [(ngModel)]="time">
         </label>
-        <button (click)="submitForm()">Erstellen</button>
+        <button class="add-form-button" (click)="submitForm()">Erstellen</button>
       </div>
     }
     <button class="add-timeslot" (click)="addTimeslot()"> Timeslot hinzufügen</button>

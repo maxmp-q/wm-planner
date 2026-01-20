@@ -3,12 +3,14 @@ import {AppState} from '../../store/state';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {IUser} from '../../interfaces/interfaces';
 import {Router} from '@angular/router';
+import {Icon} from '../icon/icon';
 
 @Component({
   selector: 'app-create-user',
   imports: [
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    Icon
   ],
   templateUrl: './create-user.html',
   styleUrl: './create-user.scss',

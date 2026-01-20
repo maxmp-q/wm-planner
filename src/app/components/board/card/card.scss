@@ -1,0 +1,52 @@
+@use "sass:color";
+
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--background-light);
+  padding: 1.5rem;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  .card-title {
+    display: flex;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    border-bottom: 2px solid var(--color-primary-light);
+    padding-bottom: 0.3rem;
+    align-items: center;
+
+    .card-name {
+      flex-grow: 1;
+    }
+  }
+
+  .menu-button{
+    margin-left: auto;
+    border: none;
+    background: none;
+    flex-shrink: 0;
+  }
+
+  // Time Slots innerhalb der Karte ordentlich anordnen
+  app-time-slot {
+    display: flex;
+    background: var(--color-secondary-tint);
+    border-radius: 8px;
+    padding: 1rem 1rem;
+    box-shadow: var(--shadow-light);
+    flex-direction: column;
+  }
+}
+
+.add-timeslot{
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--color-primary-tint);
+  color: #FFFFFF;
+  border: 0;
+}
+
+

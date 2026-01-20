@@ -3,37 +3,40 @@
 // Theme: Navy (Primary) | Orange (Accent) | Gray (Secondary)
 // --------------------------------------
 
-// Primary – Navy
-$color-primary-dark:   #0B1E3F;
-$color-primary:        #102C57;
-$color-primary-light:  #1C3F78;
-$color-primary-tint:   #2C5A9E;
+:root {
+  // Primary – Navy
+  --color-primary-dark:   #0B1E3F;
+  --color-primary:        #102C57;
+  --color-primary-light:  #1C3F78;
+  --color-primary-tint:   #2C5A9E;
 
-// Accent – Orange
-$color-accent-dark:    #C05700;
-$color-accent:         #FF7A00;
-$color-accent-light:   #FF9E40;
-$color-accent-tint:    #FFC28A;
+  // Accent – Orange
+  --color-accent-dark:    #C05700;
+  --color-accent:         #FF7A00;
+  --color-accent-light:   #FF9E40;
+  --color-accent-tint:    #FFC28A;
 
-// Secondary – Gray
-$color-secondary-dark: #2E2E2E;
-$color-secondary:      #6E6E6E;
-$color-secondary-light:#B5B5B5;
-$color-secondary-tint: #E5E5E5;
+  // Secondary – Gray
+  --color-secondary-dark: #2E2E2E;
+  --color-secondary:      #6E6E6E;
+  --color-secondary-light:#B5B5B5;
+  --color-secondary-tint: #E5E5E5;
 
-// Utility colors
-$color-white: #ffffff;
-$color-black: #000000;
+  // Utility colors
+  --color-white: #ffffff;
+  --color-black: #000000;
 
-// Backgrounds
-$background-light: #F7F9FC;
-$background-dark:  #0A0A0A;
+  // Backgrounds
+  --background-light: #F7F9FC;
+  --background-dark:  #0A0A0A;
 
-// Borders
-$border-color: rgba(0, 0, 0, 0.1);
+  // Borders
+  --border-color: rgba(0, 0, 0, 0.1);
 
-// Shadows
-$shadow-light: 0 4px 10px rgba(0, 0, 0, 0.08);
-$shadow-medium: 0 6px 18px rgba(0, 0, 0, 0.12);
-$shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.16);
+  // Shadows
+  --shadow-light: 0 4px 10px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 6px 18px rgba(0, 0, 0, 0.12);
+  --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
 

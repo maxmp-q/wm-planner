@@ -1,9 +1,7 @@
-@import '../../../styles/theme';
-
-.remove-user{
+.remove-user-button{
   border-radius: 8px;
   color: #000000;
-  background: #FFFFFF;
+  background: var(--color-white);
   border: 0;
   margin-left: auto;
 }

@@ -1,15 +1,10 @@
-@import '../../../styles/theme';
-
-// ----------------------------------------------------
-// Gemeinsame "Card"-Basis für Form & Tabelle
-// ----------------------------------------------------
 .shared-card {
   width: 100%;
   max-width: 600px;
-  background: $color-white;
+  background: var(--color-white);
   border-radius: 14px;
-  box-shadow: $shadow-light;
-  border: 1px solid $border-color;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color);
   padding: 24px 28px;
   margin: 0 auto;
 }
@@ -31,7 +26,7 @@
   flex-direction: column;
   font-size: 16px;
   font-weight: 500;
-  color: $color-primary-dark;
+  color: var(--color-primary-dark);
   padding: 5px;
 }
 
@@ -39,23 +34,23 @@
   margin-top: 2px;
   padding: 12px 14px;
 
-  background: $color-white;
-  border: 1px solid $color-secondary-tint;
+  background: var(--color-white);
+  border: 1px solid var(--color-secondary-tint);
   border-radius: 8px;
 
   font-size: 15px;
-  color: $color-primary-dark;
+  color: var(--color-primary-dark);
 
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
 .create-user-input::placeholder {
-  color: $color-secondary-light;
+  color: var(--color-secondary-light);
 }
 
 .create-user-input:focus {
-  border-color: $color-primary;
-  box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.15);
   outline: none;
 }
 
@@ -63,8 +58,8 @@
   margin-top: 10px;
   padding: 12px 16px;
 
-  background: $color-primary-light;
-  color: $color-white;
+  background: var(--color-primary-light);
+  color: var(--color-white);
 
   border: none;
   border-radius: 10px;
@@ -77,13 +72,13 @@
 }
 
 .create-user-button:hover {
-  background: $color-primary-dark;
-  box-shadow: $shadow-medium;
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-medium);
 }
 
 .create-user-button:active {
-  background: $color-primary-dark;
-  box-shadow: $shadow-light;
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-light);
 }
 
 // ----------------------------------------------------
@@ -104,7 +99,7 @@ table {
 }
 
 thead {
-  background: $background-light;
+  background: var(--background-light);
 }
 
 th {
@@ -112,15 +107,15 @@ th {
   padding: 14px 20px;
   font-size: 14px;
   font-weight: 600;
-  color: $color-primary-dark;
-  border-bottom: 1px solid $color-secondary-tint;
+  color: var(--color-primary-dark);
+  border-bottom: 1px solid var(--color-secondary-tint);
 }
 
 td {
   padding: 14px 20px;
   font-size: 14px;
-  color: $color-secondary-dark;
-  border-bottom: 1px solid $color-secondary-tint;
+  color: var(--color-secondary-dark);
+  border-bottom: 1px solid var(--color-secondary-tint);
 }
 
 tr:last-child td {
@@ -128,16 +123,16 @@ tr:last-child td {
 }
 
 tbody tr:hover {
-  background: $color-accent-tint;
+  background: var(--color-accent-tint);
 }
 
 .summary-button {
-  display: block;       // Block-Element, damit margin wirkt
-  margin: 20px auto;    // Zentriert horizontal, mit 20px Abstand oben/unten
+  display: block;
+  margin: 20px auto;
   padding: 12px 16px;
 
-  background: $color-primary-light;
-  color: $color-white;
+  background: var(--color-primary-light);
+  color: var(--color-white);
   border: none;
   border-radius: 10px;
   font-size: 15px;
@@ -147,12 +142,12 @@ tbody tr:hover {
 }
 
 .summary-button:hover {
-  background: $color-primary-dark;
-  box-shadow: $shadow-medium;
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-medium);
 }
 
 .summary-button:active {
-  background: $color-primary-dark;
-  box-shadow: $shadow-light;
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-light);
 }
 

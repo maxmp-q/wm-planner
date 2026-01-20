@@ -14,7 +14,7 @@ import {Toaster} from './components/toaster/toaster';
 export class App implements OnInit {
   state = inject(AppState);
 
-  password = signal<string>('');
+  password = signal<string>(sessionStorage.getItem('login') ?? '');
   login = computed(this.state.loggedIn);
 
   ngOnInit() {
@@ -27,6 +27,7 @@ export class App implements OnInit {
     effect(() => {
       const passwort = this.password();
       this.state.loginToApp(passwort);
+      sessionStorage.setItem('login', passwort);
     })
   }
 }

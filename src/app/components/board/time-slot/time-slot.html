@@ -1,7 +1,7 @@
 <section class="time-slot-card">
   <div class="time-slot-title">
     @if(editMode()){
-      <input class="time-slot-rename-input" type="text" [(ngModel)]="newTimeslotTime">
+      <input class="rename-input" type="text" [(ngModel)]="newTimeslotTime">
       <button class="menu-button" (click)="deleteTimeslot()">
         <app-icon which="delete"/>
       </button>

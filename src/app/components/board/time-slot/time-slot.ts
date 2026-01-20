@@ -1,10 +1,10 @@
 import {Component, computed, inject, input, signal} from '@angular/core';
-import {ITimeSlot, ICard, IUser} from '../../interfaces/interfaces';
+import {ITimeSlot, ICard, IUser} from '../../../interfaces/interfaces';
 import {User} from '../user/user';
-import {AppState} from '../../store/state';
-import {Dropdown} from '../dropdown/dropdown';
+import {AppState} from '../../../store/state';
+import {Dropdown} from '../../dropdown/dropdown';
 import {FormsModule} from '@angular/forms';
-import {Icon} from '../icon/icon';
+import {Icon} from '../../icon/icon';
 
 @Component({
   selector: 'app-time-slot',

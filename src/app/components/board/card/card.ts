@@ -1,9 +1,9 @@
 import {Component, computed, inject, input, signal} from '@angular/core';
-import {ICard, ITimeSlot} from '../../interfaces/interfaces';
+import {ICard, ITimeSlot} from '../../../interfaces/interfaces';
 import {TimeSlot} from '../time-slot/time-slot';
-import {AppState} from '../../store/state';
+import {AppState} from '../../../store/state';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Icon} from '../icon/icon';
+import {Icon} from '../../icon/icon';
 
 @Component({
   selector: 'app-card',

@@ -9,8 +9,8 @@ const icons = [
 export type IconType = (typeof icons)[number];
 
 const viewboxes: Record<IconType, string> = {
-  "arrow_right" : "0 0 16 16",
-  "arrow_down" : "0 0 16 16",
+  "arrow_right" : "0 0 24 24",
+  "arrow_down" : "0 0 24 24",
   "menu_dots" : "0 0 16 16",
   "delete": "0 0 1024 1024"
 }
