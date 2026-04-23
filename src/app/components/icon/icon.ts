@@ -5,7 +5,7 @@ const icons = [
   "arrow_down",
   "menu_dots",
   "delete"
-]
+] as const;
 export type IconType = (typeof icons)[number];
 
 const viewboxes: Record<IconType, string> = {
@@ -22,7 +22,7 @@ const viewboxes: Record<IconType, string> = {
   styleUrl: './icon.scss',
 })
 export class Icon {
-  which = input<IconType>('');
+  which = input<IconType>('arrow_down');
   height = input<string>('24px');
   width = input<string>('24px');
   viewbox = computed(()=> viewboxes[this.which()] ?? "0 0 16 16");
