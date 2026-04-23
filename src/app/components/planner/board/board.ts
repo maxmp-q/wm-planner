@@ -1,7 +1,7 @@
 import {Component, computed, inject, signal} from '@angular/core';
-import {AppState} from '../../store/state';
+import {AppState} from '../../../store/state';
 import {Card} from './card/card';
-import {ICard} from '../../interfaces/interfaces';
+import {ICard} from '../../../interfaces/interfaces';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({

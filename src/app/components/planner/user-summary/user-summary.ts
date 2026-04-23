@@ -1,7 +1,7 @@
 import {Component, computed, inject, signal} from '@angular/core';
-import {AppState} from '../../store/state';
-import {ICard, ITimeSlot, IUser} from '../../interfaces/interfaces';
-import {Dropdown} from '../dropdown/dropdown';
+import {AppState} from '../../../store/state';
+import {ICard, ITimeSlot, IUser} from '../../../interfaces/interfaces';
+import {Dropdown} from '../../dropdown/dropdown';
 
 interface UserExercise{
   timeslot: ITimeSlot;

@@ -1,9 +1,9 @@
 import {Component, computed, inject, signal} from '@angular/core';
-import {AppState} from '../../store/state';
+import {AppState} from '../../../store/state';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {IUser} from '../../interfaces/interfaces';
+import {IUser} from '../../../interfaces/interfaces';
 import {Router} from '@angular/router';
-import {Icon} from '../icon/icon';
+import {Icon} from '../../icon/icon';
 
 @Component({
   selector: 'app-create-user',

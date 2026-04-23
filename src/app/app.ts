@@ -1,6 +1,6 @@
 import {Component, computed, effect, inject, OnInit, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {Header} from './components/header/header';
+import {Header} from './components/planner/header/header';
 import {AppState} from './store/state';
 import {FormsModule} from '@angular/forms';
 import {Toaster} from './components/toaster/toaster';

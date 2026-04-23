@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {AppState} from '../../store/state';
+import {AppState} from '../../../store/state';
 import {Router} from '@angular/router';
 
 @Component({
