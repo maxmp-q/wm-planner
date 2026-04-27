@@ -1,5 +1,5 @@
 import {Component, computed, inject, input, signal} from '@angular/core';
-import {ITimeSlot, ICard, IUser} from '../../../../interfaces/interfaces';
+import {TimeSlotDto, CardDto, UserDto} from '../../../../interfaces/interfaces';
 import {User} from '../user/user';
 import {AppState} from '../../../../store/state';
 import {Dropdown} from '../../../dropdown/dropdown';
@@ -20,8 +20,8 @@ import {Icon} from '../../../icon/icon';
 export class TimeSlot {
   state = inject(AppState);
 
-  timeSlot = input<ITimeSlot>();
-  card = input<ICard>();
+  timeSlot = input<TimeSlotDto>();
+  card = input<CardDto>();
   allUsers = computed(()=> this.state.allUsers());
 
   availableUsers = computed(()=> {
@@ -36,7 +36,7 @@ export class TimeSlot {
     const timeslot = this.timeSlot();
     const allUsers = this.allUsers();
 
-    const timeslotUsers: IUser[] = [];
+    const timeslotUsers: UserDto[] = [];
 
     if(timeslot && allUsers && timeslot.userIDs?.length > 0){
       timeslot.userIDs.forEach(id => {
@@ -71,7 +71,7 @@ export class TimeSlot {
     this.editMode.set(!this.editMode());
   }
 
-  addUser(user: IUser){
+  addUser(user: UserDto){
     const card = this.card();
     const timeslot = this.timeSlot();
 

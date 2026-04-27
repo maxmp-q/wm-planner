@@ -1,5 +1,5 @@
 import {Component, inject, input, signal} from '@angular/core';
-import {ICard, ITimeSlot, IUser} from '../../../../interfaces/interfaces';
+import {CardDto, TimeSlotDto, UserDto} from '../../../../interfaces/interfaces';
 import {AppState} from '../../../../store/state';
 import {Icon} from '../../../icon/icon';
 
@@ -14,9 +14,9 @@ import {Icon} from '../../../icon/icon';
 export class User {
   state = inject(AppState);
 
-  user = input<IUser>();
-  timeslot = input<ITimeSlot>();
-  card = input<ICard>();
+  user = input<UserDto>();
+  timeslot = input<TimeSlotDto>();
+  card = input<CardDto>();
 
   details = signal<boolean>(false);
 

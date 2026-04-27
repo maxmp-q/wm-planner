@@ -1,5 +1,5 @@
 import {Component, computed, inject, input, signal} from '@angular/core';
-import {ICard, ITimeSlot} from '../../../../interfaces/interfaces';
+import {CardDto, TimeSlotDto} from '../../../../interfaces/interfaces';
 import {TimeSlot} from '../time-slot/time-slot';
 import {AppState} from '../../../../store/state';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -19,7 +19,7 @@ import {Icon} from '../../../icon/icon';
 export class Card {
   state = inject(AppState);
 
-  card = input<ICard>();
+  card = input<CardDto>();
   timeslots = computed(() => this.card()?.timeSlots);
 
   editMode = signal<boolean>(false);
@@ -66,7 +66,7 @@ export class Card {
         ? this.sortedTimeslots()[this.sortedTimeslots().length-1].id + 1
         : 1;
 
-      const timeslot: ITimeSlot = {
+      const timeslot: TimeSlotDto = {
         time: time,
         id: timeslotID,
         userIDs: []

@@ -1,7 +1,7 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {AppState} from '../../../store/state';
 import {Card} from './card/card';
-import {ICard} from '../../../interfaces/interfaces';
+import {CardDto} from '../../../interfaces/interfaces';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
@@ -36,7 +36,7 @@ export class Board {
 
     if(title){
       const cardID = this.sortedCards().length > 0 ? this.sortedCards()[this.sortedCards().length-1].id + 1 : 1;
-      const card: ICard = {
+      const card: CardDto = {
         title: title,
         id: cardID,
         timeSlots: []

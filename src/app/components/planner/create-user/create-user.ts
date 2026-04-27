@@ -1,7 +1,7 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {AppState} from '../../../store/state';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {IUser} from '../../../interfaces/interfaces';
+import {UserDto} from '../../../interfaces/interfaces';
 import {Router} from '@angular/router';
 import {Icon} from '../../icon/icon';
 
@@ -39,7 +39,7 @@ export class CreateUser {
     const lastname = this.lastname();
 
     if(firstname && lastname){
-      const newUser: IUser = {
+      const newUser: UserDto = {
         firstname: firstname,
         lastname: lastname,
         id: lastID
@@ -60,7 +60,7 @@ export class CreateUser {
     }
   }
 
-  deleteUser(user: IUser){
+  deleteUser(user: UserDto){
     this.state.deleteUser(user);
   }
 

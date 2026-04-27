@@ -1,16 +1,16 @@
-export interface ICard {
+export interface CardDto {
   title: string;
   id: number;
-  timeSlots : ITimeSlot[];
+  timeSlots : TimeSlotDto[];
 }
 
-export interface ITimeSlot{
+export interface TimeSlotDto {
   time: string;
   id: number;
   userIDs: number[];
 }
 
-export interface IUser{
+export interface UserDto {
   firstname: string;
   lastname: string;
   id: number;

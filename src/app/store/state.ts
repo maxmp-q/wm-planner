@@ -1,13 +1,13 @@
 import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
-import {ICard, ITimeSlot, IUser} from '../interfaces/interfaces';
+import {CardDto, TimeSlotDto, UserDto} from '../interfaces/interfaces';
 import { inject} from '@angular/core';
 import {FirebaseService} from '../services/firebase.service';
 import {PasswortService} from '../services/passwort.service';
 
 interface State{
   heading: string;
-  cards: ICard[];
-  allUsers: IUser[];
+  cards: CardDto[];
+  allUsers: UserDto[];
   loggedIn: boolean;
 }
 
@@ -53,53 +53,53 @@ export const AppState = signalStore(
     const firestore = inject(FirebaseService);
 
     return {
-      async createUser(user: IUser){
+      async createUser(user: UserDto){
         await firestore.createUser(user);
         await state.loadUsers();
       },
 
-      async deleteUser(user: IUser){
+      async deleteUser(user: UserDto){
         await firestore.deleteUser(user);
         await state.loadUsers();
         await state.loadCards();
       },
 
-      async addCard(card: ICard){
+      async addCard(card: CardDto){
         await firestore.addCard(card);
         await state.loadCards();
       },
 
-      async renameCard(card: ICard){
+      async renameCard(card: CardDto){
         await firestore.renameCard(card);
         await state.loadCards();
       },
 
-      async deleteCard(card: ICard){
+      async deleteCard(card: CardDto){
         await firestore.deleteCard(card);
         await state.loadCards();
       },
 
-      async addTimeslot(card: ICard, timeslot: ITimeSlot) {
+      async addTimeslot(card: CardDto, timeslot: TimeSlotDto) {
         await firestore.addTimeslot(card, timeslot);
         await state.loadCards();
       },
 
-      async renameTimeslot(card: ICard, timeslot: ITimeSlot){
+      async renameTimeslot(card: CardDto, timeslot: TimeSlotDto){
         await firestore.renameTimeslot(card, timeslot);
         await state.loadCards();
       },
 
-      async deleteTimeslot(card: ICard, timeslot: ITimeSlot){
+      async deleteTimeslot(card: CardDto, timeslot: TimeSlotDto){
         await firestore.deleteTimeslot(card, timeslot);
         await state.loadCards();
       },
 
-      async addUser(card: ICard, timeslot: ITimeSlot, user: IUser) {
+      async addUser(card: CardDto, timeslot: TimeSlotDto, user: UserDto) {
         await firestore.addUser(card, timeslot, user);
         await state.loadCards();
       },
 
-      async removeUser(card: ICard, timeslot: ITimeSlot, user: IUser){
+      async removeUser(card: CardDto, timeslot: TimeSlotDto, user: UserDto){
         await firestore.removeUser(card, timeslot, user);
         await state.loadCards();
       }

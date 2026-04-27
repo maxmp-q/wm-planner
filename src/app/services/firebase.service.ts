@@ -11,7 +11,7 @@ import {
   setDoc,
   updateDoc
 } from 'firebase/firestore';
-import {ICard, ITimeSlot, IUser} from '../interfaces/interfaces';
+import {CardDto, TimeSlotDto, UserDto} from '../interfaces/interfaces';
 import {ToasterState} from '../store/toaster';
 
 const firebaseConfig = {
@@ -60,27 +60,18 @@ export class FirebaseService {
     }
   }
 
-  async getAllUsers(): Promise<IUser[]> {
+  // User shit
+  async getAllUsers(): Promise<UserDto[]> {
     try {
       const querySnapshot = await getDocs(collection(this.firestore, 'allUsers'));
-      return querySnapshot.docs.map(doc => doc.data() as IUser);
+      return querySnapshot.docs.map(doc => doc.data() as UserDto);
     } catch (error) {
       console.error('Fehler beim Abrufen der Users:', error);
       return [];
     }
   }
 
-  async getAllCards(): Promise<ICard[]> {
-    try {
-      const querySnapshot = await getDocs(collection(this.firestore, 'cards'));
-      return querySnapshot.docs.map(doc => doc.data() as ICard);
-    } catch (error) {
-      console.error('Fehler beim Abrufen der Karten:', error);
-      return [];
-    }
-  }
-
-  async createUser(user: IUser) {
+  async createUser(user: UserDto) {
     try {
       const userRef = doc(collection(this.firestore, 'allUsers'), user.id.toString());
 
@@ -92,7 +83,7 @@ export class FirebaseService {
     }
   }
 
-  async deleteUser(user: IUser) {
+  async deleteUser(user: UserDto) {
     try {
       const userRef = doc(collection(this.firestore, 'allUsers'), user.id.toString());
 
@@ -105,7 +96,7 @@ export class FirebaseService {
     }
   }
 
-  private async deleteUsersFromCards(user: IUser){
+  private async deleteUsersFromCards(user: UserDto){
     try {
       const allCards = await this.getAllCards();
 
@@ -123,7 +114,18 @@ export class FirebaseService {
     }
   }
 
-  async addCard(card: ICard){
+  // Card shit
+  async getAllCards(): Promise<CardDto[]> {
+    try {
+      const querySnapshot = await getDocs(collection(this.firestore, 'cards'));
+      return querySnapshot.docs.map(doc => doc.data() as CardDto);
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Karten:', error);
+      return [];
+    }
+  }
+
+  async addCard(card: CardDto){
     try {
       const cardRef = doc(collection(this.firestore, 'cards'), card.id.toString());
 
@@ -136,7 +138,7 @@ export class FirebaseService {
     }
   }
 
-  async renameCard(card: ICard){
+  async renameCard(card: CardDto){
     try {
       const cardRef = doc(this.firestore, 'cards', card.id.toString());
       const cardSnap = await getDoc(cardRef);
@@ -154,7 +156,7 @@ export class FirebaseService {
     }
   }
 
-  async deleteCard(card: ICard){
+  async deleteCard(card: CardDto){
     try {
       const cardRef = doc(collection(this.firestore, 'cards'), card.id.toString());
 
@@ -166,9 +168,10 @@ export class FirebaseService {
     }
   }
 
-  async addTimeslot(card: ICard, timeslot: ITimeSlot){
+  // Timeslot Shit
+  async addTimeslot(card: CardDto, timeslot: TimeSlotDto){
     try {
-      const cardData: FirebaseData<ICard> = await this.getData('cards', card.id.toString());
+      const cardData: FirebaseData<CardDto> = await this.getData('cards', card.id.toString());
 
       if(cardData.data){
         const updatedTimeSlots = [...cardData.data.timeSlots, timeslot];
@@ -184,9 +187,9 @@ export class FirebaseService {
     }
   }
 
-  async renameTimeslot(card: ICard, timeslot: ITimeSlot){
+  async renameTimeslot(card: CardDto, timeslot: TimeSlotDto){
     try {
-      const cardData: FirebaseData<ICard> = await this.getData('cards', card.id.toString());
+      const cardData: FirebaseData<CardDto> = await this.getData('cards', card.id.toString());
 
       if(cardData.data){
         const updatedTimeSlots = cardData.data.timeSlots.map(ts => {
@@ -210,9 +213,9 @@ export class FirebaseService {
     }
   }
 
-  async deleteTimeslot(card: ICard, timeslot: ITimeSlot){
+  async deleteTimeslot(card: CardDto, timeslot: TimeSlotDto){
     try {
-      const cardData: FirebaseData<ICard> = await this.getData('cards', card.id.toString());
+      const cardData: FirebaseData<CardDto> = await this.getData('cards', card.id.toString());
 
       if(cardData.data){
         const updatedTimeSlots = cardData.data.timeSlots.filter(ts => ts.id !== timeslot.id);
@@ -228,9 +231,9 @@ export class FirebaseService {
     }
   }
 
-  async addUser(card: ICard, timeslot: ITimeSlot, user: IUser){
+  async addUser(card: CardDto, timeslot: TimeSlotDto, user: UserDto){
     try {
-      const cardData: FirebaseData<ICard> = await this.getData('cards', card.id.toString());
+      const cardData: FirebaseData<CardDto> = await this.getData('cards', card.id.toString());
 
       if(cardData.data){
         const updatedTimeSlots = cardData.data.timeSlots.map(ts => {
@@ -254,9 +257,9 @@ export class FirebaseService {
     }
   }
 
-  async removeUser(card: ICard, timeslot: ITimeSlot, user: IUser){
+  async removeUser(card: CardDto, timeslot: TimeSlotDto, user: UserDto){
     try {
-      const cardData: FirebaseData<ICard> = await this.getData<ICard>('cards', card.id.toString());
+      const cardData: FirebaseData<CardDto> = await this.getData<CardDto>('cards', card.id.toString());
 
       if(cardData.data){
         const updatedTimeSlots = cardData.data.timeSlots.map(ts => {
@@ -281,6 +284,7 @@ export class FirebaseService {
     }
   }
 
+  // Other shit
   async getHeading(): Promise<string> {
     try {
       const headingData: FirebaseData<Record<string, string>> = await this.getData<Record<string, string>>('heading', '1');

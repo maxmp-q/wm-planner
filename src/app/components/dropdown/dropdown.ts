@@ -1,5 +1,5 @@
 import {Component, input, output, signal} from '@angular/core';
-import { IUser} from '../../interfaces/interfaces';
+import { UserDto} from '../../interfaces/interfaces';
 import {Icon} from '../icon/icon';
 
 @Component({
@@ -11,13 +11,13 @@ import {Icon} from '../icon/icon';
   styleUrl: './dropdown.scss',
 })
 export class Dropdown {
-  users = input<IUser[]>();
+  users = input<UserDto[]>();
   title = input<string>('');
-  selectedCard = output<IUser>();
+  selectedCard = output<UserDto>();
 
   showDropdown = signal<boolean>(false);
 
-  selectEntry(user: IUser){
+  selectEntry(user: UserDto){
     this.selectedCard.emit(user);
     this.toggleDropdown();
   }

@@ -1,11 +1,11 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {AppState} from '../../../store/state';
-import {ICard, ITimeSlot, IUser} from '../../../interfaces/interfaces';
+import {CardDto, TimeSlotDto, UserDto} from '../../../interfaces/interfaces';
 import {Dropdown} from '../../dropdown/dropdown';
 
 interface UserExercise{
-  timeslot: ITimeSlot;
-  card: ICard;
+  timeslot: TimeSlotDto;
+  card: CardDto;
 }
 
 @Component({
@@ -23,7 +23,7 @@ export class UserSummary {
   cards = computed(() => this.state.cards());
 
   showDropdown = signal<boolean>(false);
-  currentUser = signal<IUser | undefined>(undefined);
+  currentUser = signal<UserDto | undefined>(undefined);
 
   exercisesOfUser = computed(() => {
     const userExercises: UserExercise[] = [];
@@ -55,7 +55,7 @@ export class UserSummary {
     this.showDropdown.set(!this.showDropdown());
   }
 
-  selectUser(user: IUser){
+  selectUser(user: UserDto){
     this.currentUser.set(user);
     this.openDropdown();
   }
