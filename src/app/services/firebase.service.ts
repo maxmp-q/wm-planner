@@ -60,60 +60,6 @@ export class FirebaseService {
     }
   }
 
-  // User shit
-  async getAllUsers(): Promise<UserDto[]> {
-    try {
-      const querySnapshot = await getDocs(collection(this.firestore, 'allUsers'));
-      return querySnapshot.docs.map(doc => doc.data() as UserDto);
-    } catch (error) {
-      console.error('Fehler beim Abrufen der Users:', error);
-      return [];
-    }
-  }
-
-  async createUser(user: UserDto) {
-    try {
-      const userRef = doc(collection(this.firestore, 'allUsers'), user.id.toString());
-
-      await setDoc(userRef, user);
-      this.toaster.show(`User ${user.firstname} ${user.lastname} erfolgreich erstellt.`);
-    } catch (error) {
-      this.toaster.show(`Es gab einen Fehler beim Erstellen des User ${user.firstname} ${user.lastname}`);
-      console.error('Fehler beim Erstellen des Users:', error);
-    }
-  }
-
-  async deleteUser(user: UserDto) {
-    try {
-      const userRef = doc(collection(this.firestore, 'allUsers'), user.id.toString());
-
-      await deleteDoc(userRef);
-      await this.deleteUsersFromCards(user);
-      this.toaster.show(`User ${user.firstname} ${user.lastname} erfolgreich gelöscht.`)
-    } catch (error) {
-      this.toaster.show(`Fehler beim Löschen des User ${user.firstname} ${user.lastname}.`)
-      console.error('Fehler beim Löschen des Users:', error);
-    }
-  }
-
-  private async deleteUsersFromCards(user: UserDto){
-    try {
-      const allCards = await this.getAllCards();
-
-      for(const card of allCards){
-        for(const ts of card.timeSlots){
-          if(ts.userIDs.some(id => id === user.id)){
-            await this.removeUser(card, ts, user);
-          }
-        }
-      }
-
-    } catch (error){
-      this.toaster.show(`Fehler beim Löschen des User ${user.firstname} ${user.lastname} aus den Karten.`)
-      console.error(`Fehler beim Löschen des User ${user.firstname} aus den Karten`, error);
-    }
-  }
-
   // Card shit
   async getAllCards(): Promise<CardDto[]> {
     try {

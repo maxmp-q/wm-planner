@@ -3,8 +3,9 @@ import {CardDto, TimeSlotDto, UserDto} from '../interfaces/interfaces';
 import { inject} from '@angular/core';
 import {FirebaseService} from '../services/firebase.service';
 import {PasswortService} from '../services/passwort.service';
-import {RequestService} from '../services/request.service';
+import {UserRequestService} from '../services/requests/user-request.service';
 import {firstValueFrom} from 'rxjs';
+import {ToasterState} from './toaster';
 
 interface State{
   heading: string;
@@ -28,13 +29,14 @@ export const AppState = signalStore(
   withMethods(state => {
     const firestore = inject(FirebaseService);
     const passwort = inject(PasswortService);
-    const request = inject(RequestService);
+    const request = inject(UserRequestService);
 
     return {
       async loadUsers() {
         try {
-          const users = await firstValueFrom(request.getAllUsers());
-          patchState(state, { allUsers: users });
+          request.getAllUsers().subscribe(result =>
+            patchState(state, { allUsers: result })
+          );
         } catch (err) {
           console.error('Users could not be loaded', err);
           patchState(state, { allUsers: [] });
@@ -59,17 +61,34 @@ export const AppState = signalStore(
   }),
   withMethods(state => {
     const firestore = inject(FirebaseService);
+    const userRequest = inject(UserRequestService);
+    const toaster = inject(ToasterState);
+
 
     return {
       async createUser(user: UserDto){
-        await firestore.createUser(user);
-        await state.loadUsers();
+        try {
+          const created = await firstValueFrom(userRequest.createUser(user));
+          patchState(state, {allUsers: [...state.allUsers(), created]});
+          toaster.show(`User ${user.firstname} ${user.lastname} erfolgreich erstellt.`);
+        } catch (err){
+          console.error('User could not be created.', err);
+          toaster.show(`Es gab einen Fehler beim Erstellen des User ${user.firstname} ${user.lastname}`);
+        }
       },
 
       async deleteUser(user: UserDto){
-        await firestore.deleteUser(user);
-        await state.loadUsers();
-        await state.loadCards();
+        try{
+          await firstValueFrom(userRequest.deleteUser(user.id));
+
+          await state.loadUsers();
+          await state.loadCards();
+
+          toaster.show(`User ${user.firstname} ${user.lastname} erfolgreich gelöscht.`)
+        } catch (err){
+          toaster.show(`Fehler beim Löschen des User ${user.firstname} ${user.lastname}.`)
+          console.error('User could not be deleted:', err);
+        }
       },
 
       async addCard(card: CardDto){
