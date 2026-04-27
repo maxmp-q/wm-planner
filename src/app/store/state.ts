@@ -3,6 +3,8 @@ import {CardDto, TimeSlotDto, UserDto} from '../interfaces/interfaces';
 import { inject} from '@angular/core';
 import {FirebaseService} from '../services/firebase.service';
 import {PasswortService} from '../services/passwort.service';
+import {RequestService} from '../services/request.service';
+import {firstValueFrom} from 'rxjs';
 
 interface State{
   heading: string;
@@ -26,11 +28,17 @@ export const AppState = signalStore(
   withMethods(state => {
     const firestore = inject(FirebaseService);
     const passwort = inject(PasswortService);
+    const request = inject(RequestService);
 
     return {
       async loadUsers() {
-        const users = await firestore.getAllUsers();
-        patchState(state, {allUsers: users});
+        try {
+          const users = await firstValueFrom(request.getAllUsers());
+          patchState(state, { allUsers: users });
+        } catch (err) {
+          console.error('Users could not be loaded', err);
+          patchState(state, { allUsers: [] });
+        }
       },
 
       async loadCards() {
