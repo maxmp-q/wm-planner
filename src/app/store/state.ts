@@ -7,6 +7,7 @@ import {UserRequestService} from '../services/requests/user-request.service';
 import {firstValueFrom} from 'rxjs';
 import {ToasterState} from './toaster';
 import {CardRequestService} from '../services/requests/card-request.service';
+import {TimeslotRequestService} from '../services/requests/timeslot-request.service';
 
 interface State{
   heading: string;
@@ -143,23 +144,64 @@ export const AppState = signalStore(
   }),
   withMethods(state => {
     const firestore = inject(FirebaseService);
+    const timeslotRequest = inject(TimeslotRequestService);
     const toaster = inject(ToasterState);
 
 
     return {
       async addTimeslot(card: CardDto, timeslot: TimeSlotDto) {
-        await firestore.addTimeslot(card, timeslot);
-        await state.loadCards();
+        try{
+          const created = await firstValueFrom(timeslotRequest.createTimeslot(card, timeslot));
+          const newCards = state.cards().map(old => {
+            if(old.id === card.id){
+              return {
+                ...old,
+                timeSlots: [...old.timeSlots, created]
+              };
+            } else {
+              return old;
+            }
+          });
+
+          patchState(state, {cards: newCards});
+          toaster.show(`Timeslot ${timeslot.time} erfolgreich erstellt.`);
+        } catch (err){
+          console.error("Failed to create Timeslot: ", err);
+          toaster.show('Fehler beim Erstellen des Timeslots.');
+        }
       },
 
       async renameTimeslot(card: CardDto, timeslot: TimeSlotDto){
-        await firestore.renameTimeslot(card, timeslot);
-        await state.loadCards();
+        try{
+          const renamed = await firstValueFrom(timeslotRequest.renameTimeslot(card, timeslot));
+          const newCards = state.cards().map(old => {
+            if(old.id === card.id){
+              const newTimeSlots = old.timeSlots.map(oldTime =>
+                oldTime.id === renamed.id ? renamed : oldTime
+              );
+              return {...old, timeSlots: newTimeSlots};
+            } else {
+              return old;
+            }
+          });
+
+          patchState(state, {cards: newCards});
+          toaster.show(`Timeslot ${timeslot.time} erfolgreich umbenannt.`);
+        } catch (err){
+          console.error("Failed to rename Timeslot: ", err);
+          toaster.show('Fehler beim Umbennen des Timeslots.');
+        }
       },
 
       async deleteTimeslot(card: CardDto, timeslot: TimeSlotDto){
-        await firestore.deleteTimeslot(card, timeslot);
-        await state.loadCards();
+        try{
+          await firstValueFrom(timeslotRequest.deleteTimeslot(card.id, timeslot.id));
+          state.loadCards();
+          toaster.show(`Timeslot ${timeslot.time} erfolgreich gelöscht.`);
+        } catch (err){
+          toaster.show('Fehler beim Löschen des Timeslots.');
+          console.error('Failed to delete timeslot:', err);
+        }
       },
 
       async addUser(card: CardDto, timeslot: TimeSlotDto, user: UserDto) {

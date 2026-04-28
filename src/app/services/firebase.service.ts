@@ -60,60 +60,6 @@ export class FirebaseService {
     }
   }
 
-  // Card shit
-  async getAllCards(): Promise<CardDto[]> {
-    try {
-      const querySnapshot = await getDocs(collection(this.firestore, 'cards'));
-      return querySnapshot.docs.map(doc => doc.data() as CardDto);
-    } catch (error) {
-      console.error('Fehler beim Abrufen der Karten:', error);
-      return [];
-    }
-  }
-
-  async addCard(card: CardDto){
-    try {
-      const cardRef = doc(collection(this.firestore, 'cards'), card.id.toString());
-
-      await setDoc(cardRef, card);
-
-      this.toaster.show(`Karte ${card.title} wurde erfolgreich hinzugefügt.`)
-    } catch (error) {
-      this.toaster.show(`Fehler beim Hinzufügen der Karte ${card.title}.`)
-      console.error('Fehler beim Erstellen der Karte:', error);
-    }
-  }
-
-  async renameCard(card: CardDto){
-    try {
-      const cardRef = doc(this.firestore, 'cards', card.id.toString());
-      const cardSnap = await getDoc(cardRef);
-
-      if (!cardSnap.exists()) {
-        console.error("Karte existiert nicht in Firestore");
-        return;
-      }
-
-      await updateDoc(cardRef, { title: card.title });
-      this.toaster.show(`Karte ${card.title} wurde erfolgreich umbenannt.`);
-    } catch (error){
-      this.toaster.show(`Fehler beim Umbennen der Karte ${card.title}`);
-      console.error('Fehler beim Umbennen der Karte:', error);
-    }
-  }
-
-  async deleteCard(card: CardDto){
-    try {
-      const cardRef = doc(collection(this.firestore, 'cards'), card.id.toString());
-
-      await deleteDoc(cardRef);
-      this.toaster.show(`Karte ${card.title} erfolgreich gelöscht.`);
-    } catch (error) {
-      this.toaster.show('Fehler beim Löschen der Karte:');
-      console.error('Fehler beim Löschen der Karte:', error);
-    }
-  }
-
   // Timeslot Shit
   async addTimeslot(card: CardDto, timeslot: TimeSlotDto){
     try {
