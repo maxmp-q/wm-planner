@@ -6,6 +6,7 @@ import {PasswortService} from '../services/passwort.service';
 import {UserRequestService} from '../services/requests/user-request.service';
 import {firstValueFrom} from 'rxjs';
 import {ToasterState} from './toaster';
+import {CardRequestService} from '../services/requests/card-request.service';
 
 interface State{
   heading: string;
@@ -29,12 +30,13 @@ export const AppState = signalStore(
   withMethods(state => {
     const firestore = inject(FirebaseService);
     const passwort = inject(PasswortService);
-    const request = inject(UserRequestService);
+    const userRequest = inject(UserRequestService);
+    const cardRequest = inject(CardRequestService);
 
     return {
       async loadUsers() {
         try {
-          request.getAllUsers().subscribe(result =>
+          userRequest.getAllUsers().subscribe(result =>
             patchState(state, { allUsers: result })
           );
         } catch (err) {
@@ -44,8 +46,14 @@ export const AppState = signalStore(
       },
 
       async loadCards() {
-        const cards = await firestore.getAllCards();
-        patchState(state, {cards: cards});
+        try{
+          cardRequest.getAllCards().subscribe(result =>
+            patchState(state, { cards: result })
+          );
+        } catch (err){
+          console.error('Cards could not be loaded', err);
+          patchState(state, { cards: [] });
+        }
       },
 
       async loadHeading() {
@@ -60,10 +68,8 @@ export const AppState = signalStore(
     }
   }),
   withMethods(state => {
-    const firestore = inject(FirebaseService);
-    const userRequest = inject(UserRequestService);
+    const userRequest =  inject(UserRequestService);
     const toaster = inject(ToasterState);
-
 
     return {
       async createUser(user: UserDto){
@@ -89,23 +95,58 @@ export const AppState = signalStore(
           toaster.show(`Fehler beim Löschen des User ${user.firstname} ${user.lastname}.`)
           console.error('User could not be deleted:', err);
         }
-      },
+      }
+    }
+  }),
+  withMethods(state => {
+    const cardRequest =  inject(CardRequestService);
+    const toaster = inject(ToasterState);
 
+    return {
       async addCard(card: CardDto){
-        await firestore.addCard(card);
-        await state.loadCards();
+        try{
+          const created = await firstValueFrom(cardRequest.createCard(card));
+          patchState(state, {cards: [...state.cards(), created]});
+          toaster.show(`Card ${card.title} wurde erfolgreich hinzugefügt.`);
+        } catch (err){
+          toaster.show(`Fehler beim Hinzufügen der Card ${card.title}.`)
+          console.error('Card could not be created:', err);
+        }
       },
 
       async renameCard(card: CardDto){
-        await firestore.renameCard(card);
-        await state.loadCards();
+        try{
+          const updated = await firstValueFrom(cardRequest.renameCard(card));
+          const newCards = state.cards().map(card => {
+            return updated.id === card.id ? updated : card;
+          });
+          patchState(state, {cards: newCards});
+          toaster.show(`Card ${card.title} wurde erfolgreich umbenannt.`);
+        } catch (err){
+          toaster.show(`Fehler beim Umbennen der Card ${card.title}.`)
+          console.error('Card could not be renamed:', err);
+        }
       },
 
       async deleteCard(card: CardDto){
-        await firestore.deleteCard(card);
-        await state.loadCards();
-      },
+        try{
+          await firstValueFrom(cardRequest.deleteCard(card.id));
 
+          state.loadCards();
+          toaster.show(`Card ${card.title} erfolgreich gelöscht.`);
+        } catch (err){
+          toaster.show(`Fehler beim Löschen der Card ${card.title}`);
+          console.error('Card could not be deleted:', err);
+        }
+      }
+    }
+  }),
+  withMethods(state => {
+    const firestore = inject(FirebaseService);
+    const toaster = inject(ToasterState);
+
+
+    return {
       async addTimeslot(card: CardDto, timeslot: TimeSlotDto) {
         await firestore.addTimeslot(card, timeslot);
         await state.loadCards();

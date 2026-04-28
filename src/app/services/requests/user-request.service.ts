@@ -17,6 +17,6 @@ export class UserRequestService extends RequestService{
   }
 
   deleteUser(userID: number): Observable<void>{
-    return this.http.delete<void>(`${this.baseUrl}/users/${userID}`);
+    return this.http.delete<void>(`${this.baseUrl}/users?id=${userID}`);
   }
 }
