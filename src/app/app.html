@@ -4,14 +4,6 @@
     <router-outlet/>
     <app-toaster/>
   } @else {
-    <label>
-      Bitte gibt das Passwort ein:
-      <input
-        class="login-input"
-        type="password"
-        [(ngModel)]="password"
-      >
-    </label>
-    <button (click)="loginButton()">Login</button>
+    <app-login-page />
   }
 </section>

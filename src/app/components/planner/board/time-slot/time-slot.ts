@@ -69,10 +69,10 @@ export class TimeSlot {
 
     if(!this.editMode() && timeslot){
       this.newTimeslotTime.set(timeslot.time);
-    } else if(timeslot && card) {
+    } else if(timeslot && card && timeslot.time !== this.newTimeslotTime()) {
       try {
         this.state.renameTimeslot(card, {...timeslot, time: this.newTimeslotTime()});
-        this.toaster.show(`Timeslot ${timeslot.time} erfolgreich umbenannt.`);
+        this.toaster.show(`Timeslot ${timeslot.time} in ${this.newTimeslotTime()} umbenannt.`);
       } catch {
         this.toaster.show('Fehler beim Umbennen des Timeslots.');
       }

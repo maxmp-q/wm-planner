@@ -45,10 +45,10 @@ export class Card {
     const card = this.card();
     if(!this.editMode() && card){
       this.newCardName.set(card.title);
-    } else if(card) {
+    } else if(card && card.title !== this.newCardName()) {
       try {
         this.state.renameCard({...card, title: this.newCardName()});
-        this.toaster.show(`Card ${card.title} wurde erfolgreich umbenannt.`);
+        this.toaster.show(`Card ${card.title} in ${this.newCardName()} umbenannt.`);
       } catch {
         this.toaster.show(`Fehler beim Umbennen der Card ${card.title}.`);
       }
