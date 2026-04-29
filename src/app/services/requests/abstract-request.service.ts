@@ -7,7 +7,7 @@ import {HeadingDto} from '../../interfaces/interfaces';
   providedIn: 'root',
 })
 export abstract class RequestService {
-  protected baseUrl = "http://localhost:8080";
+  protected baseUrl = "https://wm-planner-backend.onrender.com";
   http = inject(HttpClient);
 
   getHeading(): Observable<HeadingDto>{

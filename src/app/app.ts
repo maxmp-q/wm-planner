@@ -15,7 +15,7 @@ export class App implements OnInit {
   state = inject(AppState);
 
   password = signal<string>(sessionStorage.getItem('login') ?? '');
-  login = computed(this.state.loggedIn);
+  login = computed(() => this.state.loggedIn());
 
   ngOnInit() {
     this.state.loadUsers();

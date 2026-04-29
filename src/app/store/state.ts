@@ -37,9 +37,8 @@ export const AppState = signalStore(
     return {
       async loadUsers() {
         try {
-          userRequest.getAllUsers().subscribe(result =>
-            patchState(state, { allUsers: result })
-          );
+          const users = await firstValueFrom(userRequest.getAllUsers());
+          patchState(state, {allUsers: users});
         } catch (err) {
           console.error('Users could not be loaded', err);
           patchState(state, { allUsers: [] });
