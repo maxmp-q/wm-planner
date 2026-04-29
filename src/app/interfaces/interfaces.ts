@@ -16,4 +16,8 @@ export interface UserDto {
   id: number;
 }
 
+export interface HeadingDto{
+  title: string;
+}
+
 

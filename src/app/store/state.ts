@@ -1,13 +1,13 @@
 import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
 import {CardDto, TimeSlotDto, UserDto} from '../interfaces/interfaces';
 import { inject} from '@angular/core';
-import {FirebaseService} from '../services/firebase.service';
-import {PasswortService} from '../services/passwort.service';
 import {UserRequestService} from '../services/requests/user-request.service';
 import {firstValueFrom} from 'rxjs';
 import {ToasterState} from './toaster';
 import {CardRequestService} from '../services/requests/card-request.service';
 import {TimeslotRequestService} from '../services/requests/timeslot-request.service';
+import {RequestService} from '../services/requests/abstract-request.service';
+import {AuthRequestService} from '../services/requests/auth-request.service';
 
 interface State{
   heading: string;
@@ -29,10 +29,10 @@ export const AppState = signalStore(
     initialState
   ),
   withMethods(state => {
-    const firestore = inject(FirebaseService);
-    const passwort = inject(PasswortService);
+    const requestService = inject(RequestService);
     const userRequest = inject(UserRequestService);
     const cardRequest = inject(CardRequestService);
+    const authRequest = inject(AuthRequestService);
 
     return {
       async loadUsers() {
@@ -58,16 +58,26 @@ export const AppState = signalStore(
       },
 
       async loadHeading() {
-        const heading = await firestore.getHeading();
-        patchState(state, {heading: heading});
+        try{
+          const heading = await firstValueFrom(requestService.getHeading());
+          patchState(state, {heading: heading.title});
+        } catch (err) {
+          console.error("Failed to load heading: ", err);
+        }
       },
 
       async loginToApp(value: string) {
-        const login = await firestore.getPasswortHash() === await passwort.hashSHA256(value);
-        patchState(state, {loggedIn: login});
+        try{
+          const login = await firstValueFrom(authRequest.login(value));
+          patchState(state, {loggedIn: login});
+        } catch (err){
+          console.log("Password was wrong: ", err);
+        }
       },
     }
   }),
+
+  //All User functions
   withMethods(state => {
     const userRequest =  inject(UserRequestService);
     const toaster = inject(ToasterState);
@@ -99,6 +109,8 @@ export const AppState = signalStore(
       }
     }
   }),
+
+  // All Card functions
   withMethods(state => {
     const cardRequest =  inject(CardRequestService);
     const toaster = inject(ToasterState);
@@ -142,8 +154,9 @@ export const AppState = signalStore(
       }
     }
   }),
+
+  // All Timeslot functions
   withMethods(state => {
-    const firestore = inject(FirebaseService);
     const timeslotRequest = inject(TimeslotRequestService);
     const toaster = inject(ToasterState);
 
@@ -205,13 +218,47 @@ export const AppState = signalStore(
       },
 
       async addUser(card: CardDto, timeslot: TimeSlotDto, user: UserDto) {
-        await firestore.addUser(card, timeslot, user);
-        await state.loadCards();
+        try{
+          const added = await firstValueFrom(timeslotRequest.addUser(card.id, timeslot.id, user.id));
+          const newCards = state.cards().map(c => {
+            if(c.id === card.id){
+              const newTimeSlots = c.timeSlots.map(ts =>
+                ts.id === added.id ? added : ts
+              );
+              return {...c, timeSlots: newTimeSlots};
+            } else {
+              return c;
+            }
+          });
+
+          patchState(state, {cards: newCards});
+          toaster.show(`User ${user.firstname} erfolgreich hinzugefügt.`);
+        } catch (err){
+          toaster.show('Fehler beim Hinzufügen des Users.');
+          console.error('Failed to add User to Timeslot:', err);
+        }
       },
 
       async removeUser(card: CardDto, timeslot: TimeSlotDto, user: UserDto){
-        await firestore.removeUser(card, timeslot, user);
-        await state.loadCards();
+        try{
+          const removed = await firstValueFrom(timeslotRequest.removeUser(card.id, timeslot.id, user.id));
+          const newCards = state.cards().map(c => {
+            if(c.id === card.id){
+              const newTimeSlots = c.timeSlots.map(ts =>
+                ts.id === removed.id ? removed : ts
+              );
+              return {...c, timeSlots: newTimeSlots};
+            } else {
+              return c;
+            }
+          });
+
+          patchState(state, {cards: newCards});
+          toaster.show(`User ${user.firstname} erfolgreich entfernt.`);
+        } catch (err){
+          toaster.show('Fehler beim Entfernen des Users.');
+          console.error('Failed to remove User from Timeslot:', err);
+        }
       }
     };
   })

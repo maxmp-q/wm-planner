@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {Header} from './components/planner/header/header';
 import {AppState} from './store/state';
@@ -23,11 +23,9 @@ export class App implements OnInit {
     this.state.loadHeading();
   }
 
-  constructor() {
-    effect(() => {
-      const passwort = this.password();
-      this.state.loginToApp(passwort);
-      sessionStorage.setItem('login', passwort);
-    })
+  loginButton(){
+    const password = this.password();
+    this.state.loginToApp(password);
+    sessionStorage.setItem('login', password);
   }
 }
