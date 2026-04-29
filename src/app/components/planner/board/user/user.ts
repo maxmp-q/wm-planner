@@ -1,7 +1,8 @@
 import {Component, inject, input, signal} from '@angular/core';
 import {CardDto, TimeSlotDto, UserDto} from '../../../../interfaces/interfaces';
-import {AppState} from '../../../../store/state';
 import {Icon} from '../../../icon/icon';
+import {CardState} from '../../../../store/cardState';
+import {ToasterState} from '../../../../store/toaster';
 
 @Component({
   selector: 'app-user',
@@ -12,7 +13,8 @@ import {Icon} from '../../../icon/icon';
   styleUrl: './user.scss',
 })
 export class User {
-  state = inject(AppState);
+  state = inject(CardState);
+  toaster = inject(ToasterState);
 
   user = input<UserDto>();
   timeslot = input<TimeSlotDto>();
@@ -30,12 +32,14 @@ export class User {
     const card = this.card();
 
     if(card && timeslot && user){
-      this.state.removeUser(card, timeslot, user);
-
-      console.log(user.firstname + " wurde vom Timeslot entfernt.")
+      try {
+        this.state.removeUser(card, timeslot, user);
+        this.toaster.show(`User ${user.firstname} erfolgreich entfernt.`);
+      } catch {
+        this.toaster.show('Fehler beim Entfernen des Users.');
+      }
     } else {
-      console.log("Es gab Probleme beim Löschen des Users.")
+      this.toaster.show('Fehler beim Entfernen des Users.');
     }
-
   }
 }

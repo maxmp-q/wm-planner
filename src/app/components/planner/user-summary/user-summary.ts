@@ -1,7 +1,8 @@
 import {Component, computed, inject, signal} from '@angular/core';
-import {AppState} from '../../../store/state';
 import {CardDto, TimeSlotDto, UserDto} from '../../../interfaces/interfaces';
 import {Dropdown} from '../../dropdown/dropdown';
+import {UserState} from '../../../store/userState';
+import {CardState} from '../../../store/cardState';
 
 interface UserExercise{
   timeslot: TimeSlotDto;
@@ -17,10 +18,11 @@ interface UserExercise{
   styleUrl: './user-summary.scss',
 })
 export class UserSummary {
-  state = inject(AppState);
+  state = inject(UserState);
+  cardState = inject(CardState);
 
   users = computed(() => this.state.allUsers());
-  cards = computed(() => this.state.cards());
+  cards = computed(() => this.cardState.cards());
 
   showDropdown = signal<boolean>(false);
   currentUser = signal<UserDto | undefined>(undefined);

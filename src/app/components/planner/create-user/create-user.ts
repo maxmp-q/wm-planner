@@ -1,9 +1,10 @@
 import {Component, computed, inject, signal} from '@angular/core';
-import {AppState} from '../../../store/state';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserDto} from '../../../interfaces/interfaces';
 import {Router} from '@angular/router';
 import {Icon} from '../../icon/icon';
+import {UserState} from '../../../store/userState';
+import {ToasterState} from '../../../store/toaster';
 
 @Component({
   selector: 'app-create-user',
@@ -16,7 +17,8 @@ import {Icon} from '../../icon/icon';
   styleUrl: './create-user.scss',
 })
 export class CreateUser {
-  state = inject(AppState);
+  state = inject(UserState);
+  toaster = inject(ToasterState);
   router = inject(Router);
 
   users = computed(()=> this.state.allUsers());
@@ -46,22 +48,30 @@ export class CreateUser {
       }
 
       if(!this.users().includes(newUser)){
-        this.state.createUser(newUser);
+        try{
+          this.state.createUser(newUser);
+          this.toaster.show(`User ${newUser.firstname} ${newUser.lastname} erfolgreich erstellt.`);
 
-        this.firstname.set('');
-        this.lastname.set('');
-
-        console.log(newUser.firstname + " wurde erstellt!");
+          this.firstname.set('');
+          this.lastname.set('');
+        } catch {
+          this.toaster.show(`Fehler beim Erstellen des User ${newUser.firstname} ${newUser.lastname}`);
+        }
       } else {
-        console.log("User existiert schon oder es gab Probleme beim erstellen.");
+        console.error("User existiert schon oder es gab Probleme beim erstellen.");
       }
     } else {
-      console.log("Vor- oder Nachname wurde nicht eingetragen!");
+      this.toaster.show("Vor- oder Nachname wurde nicht eingetragen!");
     }
   }
 
   deleteUser(user: UserDto){
-    this.state.deleteUser(user);
+    try {
+      this.state.deleteUser(user);
+      this.toaster.show(`User ${user.firstname} ${user.lastname} erfolgreich gelöscht.`);
+    } catch {
+      this.toaster.show(`Fehler beim Löschen des User ${user.firstname} ${user.lastname}.`)
+    }
   }
 
   goToUserSummary(){

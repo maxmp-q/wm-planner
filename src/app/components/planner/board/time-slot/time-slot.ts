@@ -1,10 +1,12 @@
 import {Component, computed, inject, input, signal} from '@angular/core';
 import {TimeSlotDto, CardDto, UserDto} from '../../../../interfaces/interfaces';
 import {User} from '../user/user';
-import {AppState} from '../../../../store/state';
 import {Dropdown} from '../../../dropdown/dropdown';
 import {FormsModule} from '@angular/forms';
 import {Icon} from '../../../icon/icon';
+import {CardState} from '../../../../store/cardState';
+import {UserState} from '../../../../store/userState';
+import {ToasterState} from '../../../../store/toaster';
 
 @Component({
   selector: 'app-time-slot',
@@ -18,11 +20,13 @@ import {Icon} from '../../../icon/icon';
   styleUrl: './time-slot.scss',
 })
 export class TimeSlot {
-  state = inject(AppState);
+  state = inject(CardState);
+  userState = inject(UserState);
+  toaster = inject(ToasterState);
 
   timeSlot = input<TimeSlotDto>();
   card = input<CardDto>();
-  allUsers = computed(()=> this.state.allUsers());
+  allUsers = computed(()=> this.userState.allUsers());
 
   availableUsers = computed(()=> {
     const currentUsers = this.currentUsers();
@@ -66,7 +70,12 @@ export class TimeSlot {
     if(!this.editMode() && timeslot){
       this.newTimeslotTime.set(timeslot.time);
     } else if(timeslot && card) {
-      this.state.renameTimeslot(card, {...timeslot, time: this.newTimeslotTime()});
+      try {
+        this.state.renameTimeslot(card, {...timeslot, time: this.newTimeslotTime()});
+        this.toaster.show(`Timeslot ${timeslot.time} erfolgreich umbenannt.`);
+      } catch {
+        this.toaster.show('Fehler beim Umbennen des Timeslots.');
+      }
     }
     this.editMode.set(!this.editMode());
   }
@@ -77,18 +86,17 @@ export class TimeSlot {
 
     if(card && timeslot) {
       if(!timeslot.userIDs?.includes(user.id) || !timeslot.userIDs){
-        this.state.addUser(
-          card,
-          timeslot,
-          user
-        );
-
-        console.log(user.firstname + " wurde im Timeslot hinzugefügt.")
+        try {
+          this.state.addUser(card, timeslot, user);
+          this.toaster.show(`User ${user.firstname} erfolgreich hinzugefügt.`);
+        } catch {
+          this.toaster.show('Fehler beim Hinzufügen des Users.');
+        }
       } else {
-        console.log(user.firstname + " gibt es bereits im Timeslot.")
+        this.toaster.show(`${user.firstname} gibt es bereits im Timeslot.`);
       }
     } else {
-      console.log("Es gab Probleme beim Hinzufügen von einem User.")
+      this.toaster.show('Fehler beim Hinzufügen des Users.');
     }
 
     this.showDropdown.set(false);
@@ -99,7 +107,12 @@ export class TimeSlot {
     const timeslot = this.timeSlot();
 
     if(card && timeslot){
-      this.state.deleteTimeslot(card, timeslot);
+      try {
+        this.state.deleteTimeslot(card, timeslot);
+        this.toaster.show(`Timeslot ${timeslot.time} erfolgreich gelöscht.`);
+      } catch {
+        this.toaster.show('Fehler beim Löschen des Timeslots.');
+      }
     }
   }
 }

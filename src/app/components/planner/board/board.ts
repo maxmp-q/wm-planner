@@ -1,8 +1,9 @@
 import {Component, computed, inject, signal} from '@angular/core';
-import {AppState} from '../../../store/state';
 import {Card} from './card/card';
 import {CardDto} from '../../../interfaces/interfaces';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {CardState} from '../../../store/cardState';
+import {ToasterState} from '../../../store/toaster';
 
 @Component({
   selector: 'app-board',
@@ -15,7 +16,8 @@ import { FormsModule, ReactiveFormsModule} from '@angular/forms';
   styleUrl: './board.scss',
 })
 export class Board {
-  state = inject(AppState);
+  state = inject(CardState);
+  toaster = inject(ToasterState);
 
   cards = computed(() => this.state.cards());
   sortedCards = computed(() => {
@@ -26,7 +28,7 @@ export class Board {
     } else {
       return []
     }
-  })
+  });
 
   showAdd = signal<boolean>(false);
   cardTitle = signal<string>('');
@@ -42,11 +44,14 @@ export class Board {
         timeSlots: []
       }
 
-      this.state.addCard(card)
-
-      console.log(card.title + " wurde erflogreich erstellt.")
+      try{
+        this.state.addCard(card);
+        this.toaster.show(`Card ${card.title} wurde erfolgreich hinzugefügt.`);
+      } catch {
+        this.toaster.show(`Fehler beim Hinzufügen der Card ${card.title}.`);
+      }
     } else {
-      console.log("Es gab Probleme beim Erstellen der Karte")
+      this.toaster.show(`Fehler beim Hinzufügen der Card`);
     }
     this.showAdd.set(!this.showAdd());
   }
