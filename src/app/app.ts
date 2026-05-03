@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit} from '@angular/core';
+import {Component, computed, effect, inject} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {Header} from './components/planner/header/header';
 import {AppState} from './store/state';
@@ -14,16 +14,21 @@ import {LoginPage} from './components/planner/login-page/login-page';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App implements OnInit {
+export class App {
   state = inject(AppState);
   userState = inject(UserState);
   cardState = inject(CardState);
 
   login = computed(() => this.state.loggedIn());
 
-  ngOnInit() {
-    this.userState.loadUsers();
-    this.cardState.loadCards();
-    this.state.loadHeading();
+  constructor() {
+    effect(() => {
+      const login = this.login();
+      if(login){
+        this.userState.loadUsers();
+        this.cardState.loadCards();
+        this.state.loadHeading();
+      }
+    });
   }
 }

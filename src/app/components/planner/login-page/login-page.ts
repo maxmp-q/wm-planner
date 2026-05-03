@@ -1,6 +1,7 @@
 import {Component, HostListener, inject, signal} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppState} from '../../../store/state';
+import {ToasterState} from '../../../store/toaster';
 
 
 @Component({
@@ -14,13 +15,26 @@ import {AppState} from '../../../store/state';
 })
 export class LoginPage {
   state = inject(AppState);
+  toaster = inject(ToasterState);
 
-  password = signal<string>(sessionStorage.getItem('login') ?? '');
+  username = signal<string>(sessionStorage.getItem('username') ?? '');
+  password = signal<string>(sessionStorage.getItem('password') ?? '');
+
+
 
   @HostListener('window:keydown.enter')
-  loginButton(){
+  async loginButton() {
+    const username = this.username();
     const password = this.password();
-    this.state.loginToApp(password);
-    sessionStorage.setItem('login', password);
+
+    try {
+      const token = await this.state.loginToApp({username: username, password: password});
+
+      sessionStorage.setItem('username', username);
+      sessionStorage.setItem('password', password);
+      sessionStorage.setItem('token', token);
+    } catch {
+      this.toaster.show("Boardname oder Passwort sind falsch!");
+    }
   }
 }
