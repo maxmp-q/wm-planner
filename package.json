@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "jest"
   },
   "prettier": {
     "printWidth": 100,
@@ -41,6 +41,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^25.6.0",
     "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
     "jest-preset-angular": "^16.1.4",
     "ts-jest": "^29.4.9",
     "typescript": "~5.9.2"
