@@ -47,7 +47,9 @@ export class CreateUser {
         id: lastID
       }
 
-      if(!this.users().includes(newUser)){
+      const userIDs = this.users().map(user => user.id);
+
+      if(!userIDs.includes(newUser.id)){
         try{
           this.state.createUser(newUser);
           this.toaster.show(`User ${newUser.firstname} ${newUser.lastname} erfolgreich erstellt.`);
