@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, signal} from '@angular/core';
+import {Component, computed, inject, input, signal, ChangeDetectionStrategy} from '@angular/core';
 import {TimeSlotDto, CardDto, UserDto} from '../../../../interfaces/interfaces';
 import {User} from '../user/user';
 import {Dropdown} from '../../../dropdown/dropdown';
@@ -17,6 +17,7 @@ import {ToasterState} from '../../../../store/toaster';
     Icon
   ],
   templateUrl: './time-slot.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './time-slot.scss',
 })
 export class TimeSlot {

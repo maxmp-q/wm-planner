@@ -1,4 +1,4 @@
-import {Component, inject, input, signal} from '@angular/core';
+import {Component, inject, input, signal, ChangeDetectionStrategy} from '@angular/core';
 import {CardDto, TimeSlotDto, UserDto} from '../../../../interfaces/interfaces';
 import {Icon} from '../../../icon/icon';
 import {CardState} from '../../../../store/cardState';
@@ -10,6 +10,7 @@ import {ToasterState} from '../../../../store/toaster';
     Icon
   ],
   templateUrl: './user.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './user.scss',
 })
 export class User {

@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {AppState} from '../../../store/state';
 import {Router} from '@angular/router';
 
@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
   selector: 'app-header',
   imports: [],
   templateUrl: './header.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './header.scss',
 })
 export class Header {

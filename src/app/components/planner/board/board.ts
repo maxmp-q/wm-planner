@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import {Card} from './card/card';
 import {CardDto} from '../../../interfaces/interfaces';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -13,6 +13,7 @@ import {ToasterState} from '../../../store/toaster';
     ReactiveFormsModule
   ],
   templateUrl: './board.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './board.scss',
 })
 export class Board {

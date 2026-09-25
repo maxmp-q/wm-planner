@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject} from '@angular/core';
+import {Component, computed, effect, inject, ChangeDetectionStrategy} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {Header} from './components/planner/header/header';
 import {AppState} from './store/state';
@@ -12,6 +12,7 @@ import {LoginPage} from './components/planner/login-page/login-page';
   selector: 'app-root',
   imports: [RouterOutlet, Header, FormsModule, Toaster, LoginPage],
   templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.scss'
 })
 export class App {
