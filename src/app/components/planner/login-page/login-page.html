@@ -15,6 +15,10 @@
       [(ngModel)]="password"
     >
   </label>
-  <button (click)="loginButton()" class="login-button">Login</button>
+  @if(loading()){
+    <app-spinner />
+  } @else {
+    <button (click)="loginButton()" class="login-button">Login</button>
+  }
 </section>
 
