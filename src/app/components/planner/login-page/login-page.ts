@@ -1,4 +1,4 @@
-import {Component, HostListener, inject, signal} from '@angular/core';
+import {Component, HostListener, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppState} from '../../../store/state';
 import {ToasterState} from '../../../store/toaster';
@@ -11,6 +11,7 @@ import {ToasterState} from '../../../store/toaster';
     FormsModule
   ],
   templateUrl: './login-page.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login-page.scss',
 })
 export class LoginPage {

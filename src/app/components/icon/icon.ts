@@ -1,4 +1,4 @@
-import {Component, computed, input} from '@angular/core';
+import {Component, computed, input, ChangeDetectionStrategy} from '@angular/core';
 
 const icons = [
   "arrow_right",
@@ -19,6 +19,7 @@ const viewboxes: Record<IconType, string> = {
   selector: 'app-icon',
   imports: [],
   templateUrl: './icon.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './icon.scss',
 })
 export class Icon {

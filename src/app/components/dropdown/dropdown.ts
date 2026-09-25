@@ -1,4 +1,4 @@
-import {Component, input, output, signal} from '@angular/core';
+import {Component, input, output, signal, ChangeDetectionStrategy} from '@angular/core';
 import { UserDto} from '../../interfaces/interfaces';
 import {Icon} from '../icon/icon';
 
@@ -8,6 +8,7 @@ import {Icon} from '../icon/icon';
     Icon
   ],
   templateUrl: './dropdown.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dropdown.scss',
 })
 export class Dropdown {

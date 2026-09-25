@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserDto} from '../../../interfaces/interfaces';
 import {Router} from '@angular/router';
@@ -14,6 +14,7 @@ import {ToasterState} from '../../../store/toaster';
     Icon
   ],
   templateUrl: './create-user.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './create-user.scss',
 })
 export class CreateUser {

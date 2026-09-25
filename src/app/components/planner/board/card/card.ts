@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, signal} from '@angular/core';
+import {Component, computed, inject, input, signal, ChangeDetectionStrategy} from '@angular/core';
 import {CardDto, TimeSlotDto} from '../../../../interfaces/interfaces';
 import {TimeSlot} from '../time-slot/time-slot';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -15,6 +15,7 @@ import {ToasterState} from '../../../../store/toaster';
     Icon
   ],
   templateUrl: './card.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './card.scss',
 })
 export class Card {

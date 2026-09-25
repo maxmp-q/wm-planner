@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import {CardDto, TimeSlotDto, UserDto} from '../../../interfaces/interfaces';
 import {Dropdown} from '../../dropdown/dropdown';
 import {UserState} from '../../../store/userState';
@@ -15,6 +15,7 @@ interface UserExercise{
     Dropdown
   ],
   templateUrl: './user-summary.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './user-summary.scss',
 })
 export class UserSummary {
